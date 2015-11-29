@@ -23,9 +23,10 @@ data Command  = P | PA
               | Raise | Lower
               | ScrollHome | ScrollEnd
               | Exit
-data Argument = PosArg Position
+data Argument = PosArg Position | ColorArg Color | FilePathArg FilePath | DimArg Int
 
 type ShellCommand = String
+type Color = String
 
 instance Show Position where
   show LEFT = "_LEFT"
@@ -40,72 +41,105 @@ instance Show Position where
   show BOTTOM = "_BOTTOM"
 
 escape :: Doc
-escape = zeroWidthText '^'
+escape = zeroWidthText "^"
 
-p :: Doc
-p = escape <> zeroWidthText "p"
+pDoc :: Doc
+pDoc = escape <> zeroWidthText "p"
 
-pa :: Doc
-pa = escape <> zeroWidthText "pa"
+paDoc :: Doc
+paDoc = escape <> zeroWidthText "pa"
 
-fg :: Doc
-fg = escape <> zeroWidthText "fg"
+fgDoc :: Doc
+fgDoc = escape <> zeroWidthText "fg"
 
-bg :: Doc
-bg = escape <> zeroWidthText "bg"
+bgDoc :: Doc
+bgDoc = escape <> zeroWidthText "bg"
 
-i :: Doc
-i = escape <> zeroWidthText "i"
+iDoc :: Doc
+iDoc = escape <> zeroWidthText "i"
 
-r :: Doc
-r = escape <> zeroWidthText "r"
+rDoc :: Doc
+rDoc = escape <> zeroWidthText "r"
 
-ro :: Doc
-ro = escape <> zeroWidthText "ro"
+roDoc :: Doc
+roDoc = escape <> zeroWidthText "ro"
 
-c :: Doc
-c = escape <> zeroWidthText "c"
+cDoc :: Doc
+cDoc = escape <> zeroWidthText "c"
 
-co :: Doc
-co = escape <> zeroWidthText "co"
+coDoc :: Doc
+coDoc = escape <> zeroWidthText "co"
 
-ca :: Doc
-ca = escape <> zeroWidthText "ca"
+caDoc :: Doc
+caDoc = escape <> zeroWidthText "ca"
 
-toggleCollapse :: Doc
-toggleCollapse = escape <> zeroWidthText "togglecollapse"
+toggleCollapseDoc :: Doc
+toggleCollapseDoc = escape <> zeroWidthText "togglecollapse"
 
-collapse :: Doc
-collapse = escape <> zeroWidthText "collapse"
+collapseDoc :: Doc
+collapseDoc = escape <> zeroWidthText "collapse"
 
-uncollapse :: Doc
-uncollapse = escape <> zeroWidthText "uncollapse"
+uncollapseDoc :: Doc
+uncollapseDoc = escape <> zeroWidthText "uncollapse"
 
-toggleStick :: Doc
-toggleStick = escape <> zeroWidthText "togglestick"
+toggleStickDoc :: Doc
+toggleStickDoc = escape <> zeroWidthText "togglestick"
 
-stick :: Doc
-stick = escape <> zeroWidthText "stick"
+stickDoc :: Doc
+stickDoc = escape <> zeroWidthText "stick"
 
-unstick :: Doc
-unstick = escape <> zeroWidthText "unstick"
+unstickDoc :: Doc
+unstickDoc = escape <> zeroWidthText "unstick"
 
-toggleHide :: Doc
+toggleHideDoc :: Doc
+toggleHideDoc = escape <> zeroWidthText "togglehide"
 
-posSep :: Doc
-posSep = zeroWidthText ";"
+hideDoc :: Doc
+hideDoc = escape <> zeroWidthText "hide"
+
+unhideDoc :: Doc
+unhideDoc = escape <> zeroWidthText "unhide"
+
+raiseDoc :: Doc
+raiseDoc = escape <> zeroWidthText "raise"
+
+lowerDoc :: Doc
+lowerDoc = escape <> zeroWidthText "lower"
+
+scrollHomeDoc :: Doc
+scrollHomeDoc = escape <> zeroWidthText "scrollhome"
+
+scrollEndDoc :: Doc
+scrollEndDoc = escape <> zeroWidthText "scrollend"
+
+exitDoc :: Doc
+exitDoc = escape <> zeroWidthText "exit"
 
 ppCommand :: Command -> Doc
-ppCommand P = p
-ppCommand PA = pa
-ppCommand FG = fg
-ppCommand BG = bg
-ppCommand I = i
-ppCommand R = r
-ppCommand RO = ro
-ppCommand C = c
-ppCommand CO = co
-ppCommand CA = ca
+ppCommand P = pDoc
+ppCommand PA = paDoc
+ppCommand FG = fgDoc
+ppCommand BG = bgDoc
+ppCommand I = iDoc
+ppCommand R = rDoc
+ppCommand RO = roDoc
+ppCommand C = cDoc
+ppCommand CO = coDoc
+ppCommand CA = caDoc
+ppCommand ToggleCollapse = toggleCollapseDoc
+ppCommand Collapse = collapseDoc
+ppCommand Uncollapse = uncollapseDoc
+ppCommand ToggleStick = toggleStickDoc
+ppCommand Stick = stickDoc
+ppCommand Unstick = unstickDoc
+ppCommand ToggleHide = toggleHideDoc
+ppCommand Hide = hideDoc
+ppCommand Unhide = unhideDoc
+ppCommand Raise = raiseDoc
+ppCommand Lower = lowerDoc
+ppCommand ScrollHome = scrollHomeDoc
+ppCommand ScrollEnd = scrollEndDoc
+ppCommand Exit = exitDoc
 
 ppPosition :: Position -> Doc
 ppPosition HERE = empty
@@ -123,15 +157,46 @@ ppShellCommand sc = zeroWidthText sc
 ppArgument :: Argument -> Doc
 ppArgument (PosArg p) = ppPosition p
 
-command :: Doc -> Doc -> [Doc] -> Doc
-command com sep args = com <> (parens $ hcat $ intersperse sep args)
+delimitedCommand :: Doc -> Doc -> Doc -> Doc
 
-dzen2Command :: Command -> Doc -> [Argument] -> Doc
-dzen2Command com sep args = command (ppCommand com) sep $ map ppArgument args
+simpleCommand :: Doc -> Doc -> [Doc] -> Doc
+simpleCommand com sep args = com <> (parens $ hcat $ intersperse sep args)
 
-posR :: Position -> Position -> Doc
-posR xpos ypos = dzen2Command P posSep $ map PosArg [xpos, ypos]
+dzen2SimpleCommand :: Command -> Doc -> [Argument] -> Doc
+dzen2SimpleCommand com sep args = simpleCommand (ppCommand com) sep $ map ppArgument args
 
-posA :: Position -> Position -> Doc
-posA xpos ypos = dzen2Command PA posSep $ map PosArg [xpos, ypos]
+pSep :: Doc
+pSep = zeroWidthText ";"
+
+dimensionSep :: Doc
+dimensionSep = zeroWidthText "x"
+
+p :: Position -> Position -> Doc
+p xpos ypos = dzen2SimpleCommand P pSep $ map PosArg [xpos, ypos]
+
+pa :: Position -> Position -> Doc
+pa xpos ypos = dzen2SimpleCommand PA pSep $ map PosArg [xpos, ypos]
+
+fg :: Color -> Doc
+fg color = dzen2SimpleCommand FG empty [ColorArg color]
+
+bg :: Color -> Doc
+bg color = dzen2SimpleCommand BG empty [ColorArg color]
+
+i :: FilePath -> Doc
+i iconFilePath = dzen2SimpleCommand I empty [FilePathArg iconFilePath]
+
+r :: Int -> Int -> Doc
+r w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
+
+ro :: Int -> Int -> Doc
+ro w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
+
+c :: Int -> Doc
+c r = dzen2SimpleCommand C empty [DimArg r]
+
+co :: Int -> Doc
+co r = dzen2SimpleCommand CO empty [DimArg r]
+
+ca :: [(MouseButton, ShellCommand)] -> Doc
 
