@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleContexts, DeriveDataTypeable, CPP,
-             OverloadedStrings #-}
+OverloadedStrings #-}
 
 module Main where
 
@@ -94,4 +94,5 @@ dzen2 config = statusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 192
 -- MAIN
 
 main = do
+  
   xmonad =<< dzen2 myConfig
