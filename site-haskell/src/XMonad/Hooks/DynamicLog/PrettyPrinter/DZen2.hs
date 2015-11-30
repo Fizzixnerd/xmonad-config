@@ -23,7 +23,7 @@ data Command  = P | PA
               | Raise | Lower
               | ScrollHome | ScrollEnd
               | Exit
-data Argument = PosArg Position | ColorArg Color | FilePathArg FilePath | DimArg Int
+data Argument = PosArg Position | ColorArg Color | FilePathArg FilePath | DimArg Int | MouseButtonArg MouseButton | ShellCommandArg ShellCommand
 
 type ShellCommand = String
 type Color = String
@@ -156,8 +156,19 @@ ppShellCommand sc = zeroWidthText sc
 
 ppArgument :: Argument -> Doc
 ppArgument (PosArg p) = ppPosition p
+ppArgument (ColorArg c) = zeroWidthText c
+ppArgument (FilePathArg fp) = zeroWidthText fp
+ppArgument (DimArg i) = zeroWidthText $ show i
+ppArgument (MouseButtonArg mb) = ppMouseButton mb
+ppArgument (ShellCommandArg sc) = ppShellCommand sc
 
-delimitedCommand :: Doc -> Doc -> Doc -> Doc
+delimitedCommand :: Doc -> Doc -> [Doc] -> Doc -> Doc -> Doc
+delimitedCommand com sep args enclosed closer =
+  (simpleCommand com sep args) <> enclosed <> closer
+
+dzen2DelimitedCommand :: Command -> Doc -> [Argument] -> Doc -> Doc
+dzen2DelimitedCommand com sep args enclosed = 
+  delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
 
 simpleCommand :: Doc -> Doc -> [Doc] -> Doc
 simpleCommand com sep args = com <> (parens $ hcat $ intersperse sep args)
@@ -171,17 +182,20 @@ pSep = zeroWidthText ";"
 dimensionSep :: Doc
 dimensionSep = zeroWidthText "x"
 
+clickableSep :: Doc
+clickableSep = zeroWidthText ","
+
 p :: Position -> Position -> Doc
 p xpos ypos = dzen2SimpleCommand P pSep $ map PosArg [xpos, ypos]
 
 pa :: Position -> Position -> Doc
 pa xpos ypos = dzen2SimpleCommand PA pSep $ map PosArg [xpos, ypos]
 
-fg :: Color -> Doc
-fg color = dzen2SimpleCommand FG empty [ColorArg color]
+fg :: Color -> Doc -> Doc
+fg color content = dzen2DelimitedCommand FG empty [ColorArg color] content
 
-bg :: Color -> Doc
-bg color = dzen2SimpleCommand BG empty [ColorArg color]
+bg :: Color -> Doc -> Doc
+bg color content = dzen2DelimitedCommand BG empty [ColorArg color] content
 
 i :: FilePath -> Doc
 i iconFilePath = dzen2SimpleCommand I empty [FilePathArg iconFilePath]
@@ -198,5 +212,47 @@ c r = dzen2SimpleCommand C empty [DimArg r]
 co :: Int -> Doc
 co r = dzen2SimpleCommand CO empty [DimArg r]
 
-ca :: [(MouseButton, ShellCommand)] -> Doc
+ca :: MouseButton -> ShellCommand -> Doc -> Doc
+ca mb sc content = dzen2DelimitedCommand CA clickableSep [MouseButtonArg mb, ShellCommandArg sc] content
 
+toggleCollapse :: Doc 
+toggleCollapse = dzen2SimpleCommand ToggleCollapse empty []
+
+collapse :: Doc
+collapse = dzen2SimpleCommand Collapse empty []
+
+uncollapse :: Doc
+uncollapse = dzen2SimpleCommand Uncollapse empty []
+
+toggleStick :: Doc
+toggleStick = dzen2SimpleCommand ToggleStick empty []
+
+stick :: Doc
+stick = dzen2SimpleCommand Stick empty []
+
+unstick :: Doc
+unstick = dzen2SimpleCommand Unstick empty []
+
+toggleHide :: Doc
+toggleHide = dzen2SimpleCommand ToggleHide empty []
+
+hide :: Doc
+hide = dzen2SimpleCommand Hide empty []
+
+unhide :: Doc
+unhide = dzen2SimpleCommand Unhide empty []
+
+raise :: Doc
+raise = dzen2SimpleCommand Raise empty []
+
+lower :: Doc
+lower = dzen2SimpleCommand Lower empty []
+
+scrollHome :: Doc
+scrollHome = dzen2SimpleCommand ScrollHome empty []
+
+scrollEnd :: Doc
+scrollEnd = dzen2SimpleCommand ScrollEnd empty []
+
+exit :: Doc
+exit = dzen2SimpleCommand Exit empty []

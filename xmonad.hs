@@ -69,6 +69,7 @@ myConfig = ewmh $ defaultConfig
 -- DZEN2
 
 -- | This is horrible, and needs to be fixed.  Do that.
+-- UPDATE: Okay, I've made a library that should make this better.
 order :: [String] -> [String]
 order (ws:lo:cwt:extras) = "^p(_LEFT)":
                            ws:
