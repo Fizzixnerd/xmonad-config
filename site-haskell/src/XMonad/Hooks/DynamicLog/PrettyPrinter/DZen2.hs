@@ -1,6 +1,15 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
 module XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2 where
+
+import XMonad hiding (Color, Position, Status, Hide)
+
+import XMonad.Util.Run
+
+import XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
+import XMonad.Hooks.ManageDocks hiding (R)
+
+import XMonad.Layout.LayoutModifier
 
 import Text.PrettyPrint hiding (sep)
 
@@ -23,10 +32,16 @@ data Command  = P | PA
               | Raise | Lower
               | ScrollHome | ScrollEnd
               | Exit
-data Argument = PosArg Position | ColorArg Color | FilePathArg FilePath | DimArg Int | MouseButtonArg MouseButton | ShellCommandArg ShellCommand
+data Argument = PosArg Position 
+              | ColorArg Color 
+              | FilePathArg FilePath 
+              | DimArg Int 
+              | MouseButtonArg MouseButton 
+              | ShellCommandArg ShellCommand
 
 type ShellCommand = String
 type Color = String
+type Status = (Doc, Doc, Doc)
 
 instance Show Position where
   show LEFT = "_LEFT"
@@ -39,6 +54,90 @@ instance Show Position where
   show UNLOCK_X = "_UNLOCK_X"
   show TOP = "_TOP"
   show BOTTOM = "_BOTTOM"
+
+dynamicStatusBar :: LayoutClass l Window
+                    => String -- ^ The command line to launch the status bar.
+                    -> Status -- ^ The PrettyPrint Doc.
+                    -> (XConfig Layout -> (KeyMask, KeySym))
+                              -- ^ The desired key binding to toggle bar visibility.
+                    -> XConfig l -- ^ The base config.
+                    -> IO (XConfig (ModifiedLayout AvoidStruts l))
+dynamicStatusBar cmd stat k conf = do
+  h <- spawnPipe cmd
+  return $ conf {
+    layoutHook = avoidStruts $ layoutHook conf
+    }
+
+
+-- -- | Modifies the given base configuration to launch the given status bar,
+-- -- send status information to that bar, and allocate space on the screen edges
+-- -- for the bar.
+-- statusBar :: LayoutClass l Window
+--           => String    -- ^ the command line to launch the status bar
+--           -> PP        -- ^ the pretty printing options
+--           -> (XConfig Layout -> (KeyMask, KeySym))
+--                        -- ^ the desired key binding to toggle bar visibility
+--           -> XConfig l -- ^ the base config
+--           -> IO (XConfig (ModifiedLayout AvoidStruts l))
+-- statusBar cmd pp k conf = do
+--     h <- spawnPipe cmd
+--     return $ conf
+--         { layoutHook = avoidStruts (layoutHook conf)
+--         , logHook = do
+--               logHook conf
+--               dynamicLogWithPP pp { ppOutput = hPutStrLn h }
+--         , manageHook = manageHook conf <+> manageDocks
+--         , keys       = liftM2 M.union keys' (keys conf)
+--         }
+--  where
+--     keys' = (`M.singleton` sendMessage ToggleStruts) . k
+
+-- -- | The same as 'dynamicLogWithPP', except it simply returns the status
+-- --   as a formatted string without actually printing it to stdout, to
+-- --   allow for further processing, or use in some application other than
+-- --   a status bar.
+-- dynamicLogString :: PP -> X String
+-- dynamicLogString pp = do
+
+--      winset <- gets windowset
+--      urgents <- readUrgents
+--      sort' <- ppSort pp
+
+--      -- layout description
+--      let ld = description . S.layout . S.workspace . S.current $ winset
+
+--      -- workspace list
+--      let ws = pprWindowSet sort' urgents pp winset
+
+--      -- window title
+--      wt <- maybe (return "") (fmap show . getName) . S.peek $ winset
+
+--      -- run extra loggers, ignoring any that generate errors.
+--      extras <- mapM (flip catchX (return Nothing)) $ ppExtras pp
+
+--      return $ encodeString . sepBy (ppSep pp) . ppOrder pp $
+--                          [ ws
+--                          , ppLayout pp ld
+--                          , ppTitle  pp wt
+--                          ]
+--                          ++ catMaybes extras
+
+-- -- | Format the workspace information, given a workspace sorting function,
+-- --   a list of urgent windows, a pretty-printer format, and the current
+-- --   WindowSet.
+-- pprWindowSet :: WorkspaceSort -> [Window] -> PP -> WindowSet -> String
+-- pprWindowSet sort' urgents pp s = sepBy (ppWsSep pp) . map fmt . sort' $
+--                                   map S.workspace (S.current s : S.visible s) ++ S.hidden s
+--     where this     = S.currentTag s
+--           visibles = map (S.tag . S.workspace) (S.visible s)
+
+--           fmt w = printer pp (S.tag w)
+--            where printer | any (\x -> maybe False (== S.tag w) (S.findTag x s)) urgents  = ppUrgent
+--                          | S.tag w == this                                               = ppCurrent
+--                          | S.tag w `elem` visibles                                       = ppVisible
+--                          | isJust (S.stack w)                                            = ppHidden
+--                          | otherwise                                                     = ppHiddenNoWindows
+
 
 escape :: Doc
 escape = zeroWidthText "^"
@@ -166,15 +265,15 @@ delimitedCommand :: Doc -> Doc -> [Doc] -> Doc -> Doc -> Doc
 delimitedCommand com sep args enclosed closer =
   (simpleCommand com sep args) <> enclosed <> closer
 
-dzen2DelimitedCommand :: Command -> Doc -> [Argument] -> Doc -> Doc
+dzen2DelimitedCommand :: Command -> Doc -> [Argument] -> Doc -> DynamicDoc
 dzen2DelimitedCommand com sep args enclosed = 
-  delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
+  DynDoc $ delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
 
 simpleCommand :: Doc -> Doc -> [Doc] -> Doc
 simpleCommand com sep args = com <> (parens $ hcat $ intersperse sep args)
 
-dzen2SimpleCommand :: Command -> Doc -> [Argument] -> Doc
-dzen2SimpleCommand com sep args = simpleCommand (ppCommand com) sep $ map ppArgument args
+dzen2SimpleCommand :: Command -> Doc -> [Argument] -> DynamicDoc
+dzen2SimpleCommand com sep args = DynDoc $ simpleCommand (ppCommand com) sep $ map ppArgument args
 
 pSep :: Doc
 pSep = zeroWidthText ";"
@@ -185,74 +284,74 @@ dimensionSep = zeroWidthText "x"
 clickableSep :: Doc
 clickableSep = zeroWidthText ","
 
-p :: Position -> Position -> Doc
+p :: Position -> Position -> DynamicDoc
 p xpos ypos = dzen2SimpleCommand P pSep $ map PosArg [xpos, ypos]
 
-pa :: Position -> Position -> Doc
+pa :: Position -> Position -> DynamicDoc
 pa xpos ypos = dzen2SimpleCommand PA pSep $ map PosArg [xpos, ypos]
 
-fg :: Color -> Doc -> Doc
+fg :: Color -> Doc -> DynamicDoc
 fg color content = dzen2DelimitedCommand FG empty [ColorArg color] content
 
-bg :: Color -> Doc -> Doc
+bg :: Color -> Doc -> DynamicDoc
 bg color content = dzen2DelimitedCommand BG empty [ColorArg color] content
 
-i :: FilePath -> Doc
+i :: FilePath -> DynamicDoc
 i iconFilePath = dzen2SimpleCommand I empty [FilePathArg iconFilePath]
 
-r :: Int -> Int -> Doc
+r :: Int -> Int -> DynamicDoc
 r w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
 
-ro :: Int -> Int -> Doc
+ro :: Int -> Int -> DynamicDoc
 ro w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
 
-c :: Int -> Doc
+c :: Int -> DynamicDoc
 c r = dzen2SimpleCommand C empty [DimArg r]
 
-co :: Int -> Doc
+co :: Int -> DynamicDoc
 co r = dzen2SimpleCommand CO empty [DimArg r]
 
-ca :: MouseButton -> ShellCommand -> Doc -> Doc
+ca :: MouseButton -> ShellCommand -> Doc -> DynamicDoc
 ca mb sc content = dzen2DelimitedCommand CA clickableSep [MouseButtonArg mb, ShellCommandArg sc] content
 
-toggleCollapse :: Doc 
+toggleCollapse :: DynamicDoc 
 toggleCollapse = dzen2SimpleCommand ToggleCollapse empty []
 
-collapse :: Doc
+collapse :: DynamicDoc
 collapse = dzen2SimpleCommand Collapse empty []
 
-uncollapse :: Doc
+uncollapse :: DynamicDoc
 uncollapse = dzen2SimpleCommand Uncollapse empty []
 
-toggleStick :: Doc
+toggleStick :: DynamicDoc
 toggleStick = dzen2SimpleCommand ToggleStick empty []
 
-stick :: Doc
+stick :: DynamicDoc
 stick = dzen2SimpleCommand Stick empty []
 
-unstick :: Doc
+unstick :: DynamicDoc
 unstick = dzen2SimpleCommand Unstick empty []
 
-toggleHide :: Doc
+toggleHide :: DynamicDoc
 toggleHide = dzen2SimpleCommand ToggleHide empty []
 
-hide :: Doc
+hide :: DynamicDoc
 hide = dzen2SimpleCommand Hide empty []
 
-unhide :: Doc
+unhide :: DynamicDoc
 unhide = dzen2SimpleCommand Unhide empty []
 
-raise :: Doc
+raise :: DynamicDoc
 raise = dzen2SimpleCommand Raise empty []
 
-lower :: Doc
+lower :: DynamicDoc
 lower = dzen2SimpleCommand Lower empty []
 
-scrollHome :: Doc
+scrollHome :: DynamicDoc
 scrollHome = dzen2SimpleCommand ScrollHome empty []
 
-scrollEnd :: Doc
+scrollEnd :: DynamicDoc
 scrollEnd = dzen2SimpleCommand ScrollEnd empty []
 
-exit :: Doc
+exit :: DynamicDoc
 exit = dzen2SimpleCommand Exit empty []

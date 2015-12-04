@@ -88,7 +88,7 @@ dzen2PP = defaultPP { ppTitle = const ""
                     , ppSep = " "
                     , ppLayout = last . words
                     }
-  
+
 dzen2 config = statusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" dzen2PP (const (mod4Mask, xK_P)) config
 
 -- MAIN
