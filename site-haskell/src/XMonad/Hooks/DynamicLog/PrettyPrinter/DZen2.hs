@@ -11,9 +11,12 @@ import XMonad.Hooks.ManageDocks hiding (R)
 
 import XMonad.Layout.LayoutModifier
 
-import Text.PrettyPrint hiding (sep)
+import Text.PrettyPrint hiding (sep, (<+>))
 
 import Data.List
+import qualified Data.Map as M
+import Control.Monad (liftM2)
+
 
 data Position = LEFT | RIGHT | CENTER 
               | VALUE Int 
@@ -57,17 +60,23 @@ instance Show Position where
 
 dynamicStatusBar :: LayoutClass l Window
                     => String -- ^ The command line to launch the status bar.
-                    -> Status -- ^ The PrettyPrint Doc.
+                    -> DynamicDoc -- ^ The DynamicDoc
                     -> (XConfig Layout -> (KeyMask, KeySym))
                               -- ^ The desired key binding to toggle bar visibility.
                     -> XConfig l -- ^ The base config.
                     -> IO (XConfig (ModifiedLayout AvoidStruts l))
-dynamicStatusBar cmd stat k conf = do
+dynamicStatusBar cmd doc k conf = do
   h <- spawnPipe cmd
-  return $ conf {
-    layoutHook = avoidStruts $ layoutHook conf
+  return $ conf 
+    { layoutHook = avoidStruts $ layoutHook conf 
+    , logHook    = do
+        logHook conf
+        io $ hPrintDynamicDoc h doc
+    , manageHook = manageHook conf <+> manageDocks 
+    , keys       = liftM2 M.union keys' (keys conf)
     }
-
+      where
+         keys' = (`M.singleton` sendMessage ToggleStruts) . k
 
 -- -- | Modifies the given base configuration to launch the given status bar,
 -- -- send status information to that bar, and allocate space on the screen edges
@@ -125,7 +134,7 @@ dynamicStatusBar cmd stat k conf = do
 -- -- | Format the workspace information, given a workspace sorting function,
 -- --   a list of urgent windows, a pretty-printer format, and the current
 -- --   WindowSet.
--- pprWindowSet :: WorkspaceSort -> [Window] -> PP -> WindowSet -> String
+-- 
 -- pprWindowSet sort' urgents pp s = sepBy (ppWsSep pp) . map fmt . sort' $
 --                                   map S.workspace (S.current s : S.visible s) ++ S.hidden s
 --     where this     = S.currentTag s
@@ -137,7 +146,6 @@ dynamicStatusBar cmd stat k conf = do
 --                          | S.tag w `elem` visibles                                       = ppVisible
 --                          | isJust (S.stack w)                                            = ppHidden
 --                          | otherwise                                                     = ppHiddenNoWindows
-
 
 escape :: Doc
 escape = zeroWidthText "^"
@@ -355,3 +363,4 @@ scrollEnd = dzen2SimpleCommand ScrollEnd empty []
 
 exit :: DynamicDoc
 exit = dzen2SimpleCommand Exit empty []
+
