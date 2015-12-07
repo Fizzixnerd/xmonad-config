@@ -1,8 +1,8 @@
 module XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc where
 
-import Control.Monad.IO.Class
-
 import XMonad.Util.Run
+
+import Control.Monad.IO.Class
 
 import Text.PrettyPrint
 

@@ -9,6 +9,7 @@ import System.Desktop.Commands.Fizzixnerd
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.DynamicLog.PrettyPrinter hiding (workspaces)
+import XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
 import XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -24,17 +25,19 @@ import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.WindowSwitcherDecoration
 import XMonad.Layout.DraggingVisualizer
+import XMonad.Layout.LayoutModifier
 
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
-import XMonad.Util.Loggers hiding (battery)
+import XMonad.Util.Loggers hiding (battery, date)
 import XMonad.Util.Timer
 import qualified XMonad.Util.ExtensibleState as XS
 import qualified XMonad.Util.Dzen as Dzen
 
-import System.IO
-
 import System.Information.Battery
+
+import System.IO
+import Data.Monoid
 
 -- WORKSPACES
 
@@ -74,6 +77,7 @@ myConfig = ewmh $ defaultConfig
 
 -- | This is horrible, and needs to be fixed.  Do that.
 -- UPDATE: Okay, I've made a library that should make this better.
+
 -- order :: [String] -> [String]
 -- order (ws:lo:cwt:extras) = "^p(_LEFT)":
 --                            ws:
@@ -93,11 +97,14 @@ dzen2Time = dzenColorL "green" "black" $ logCmd time
 --                     , ppLayout = last . words
 --                     }
 
+dzen2 :: LayoutClass l Window => 
+         XConfig l ->
+         IO (XConfig (ModifiedLayout AvoidStruts l))
 dzen2 config = do
+  d <- date
   b <- battery
-  dynamicStatusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" b (const (mod4Mask, xK_P)) config
+  dynamicStatusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" (b <> d) (const (mod4Mask, xK_P)) config
 
 -- MAIN
-
 main = do
   xmonad =<< dzen2 myConfig

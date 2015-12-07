@@ -14,7 +14,7 @@ import Control.Monad.IO.Class
 
 import Data.Monoid
 import Data.Maybe
-import Data.List (intersperse)
+import Data.List (intersperse, init)
 
 data WorkspacePP = WSPP { wsppCurrent         :: WorkspaceId -> DynamicDoc
                         , wsppVisible         :: WorkspaceId -> DynamicDoc
@@ -49,7 +49,7 @@ defaultLayoutPP = LPP { lppTitle = DynStr }
 date :: MonadIO m => m DynamicDoc
 date = do
   theDate <- runProcess ("date", [])
-  return $ DynStr theDate
+  return $ DynStr . init $ theDate
 
 -- | An (m DynStr) containing the battery percentage, without a percent sign.
 battery :: MonadIO m => m DynamicDoc
@@ -67,7 +67,6 @@ sepBy :: DynamicDoc   -- ^ separator
          -> [DynamicDoc] -- ^ fields to output
          -> DynamicDoc
 sepBy sep = mconcat . intersperse sep . filter (not . (== mempty))
-
 
 -- | (Adapted from pprWindowSet from XMonad.Hooks.DynamicLog.)
 workspaces :: WorkspacePP -> X DynamicDoc
