@@ -1,3 +1,4 @@
+
 module XMonad.Hooks.DynamicLog.PrettyPrinter where
 
 import XMonad hiding (workspaces)
@@ -9,6 +10,8 @@ import XMonad.Util.NamedWindows
 
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
+
+import Text.PrettyPrint hiding (empty)
 
 import Control.Monad.IO.Class
 
@@ -26,47 +29,59 @@ data WorkspacePP = WSPP { wsppCurrent         :: WorkspaceId -> DynamicDoc
                         }
 
 defaultWorkspacePP :: WorkspacePP
-defaultWorkspacePP = WSPP { wsppCurrent         = \x -> DynStr $ "[" ++ x ++ "]"
-                          , wsppVisible         = \x -> DynStr $ "[" ++ x ++ "]"
-                          , wsppHidden          = DynStr
-                          , wsppHiddenNoWindows = const mempty
-                          , wsppUrgent          = \x -> DynStr $ "*" ++ x ++ "*"
-                          , wsppSep             = DynStr " "
+defaultWorkspacePP = WSPP { wsppCurrent         = \x -> dynStr $ "[" ++ x ++ "]"
+                          , wsppVisible         = \x -> dynStr $ "[" ++ x ++ "]"
+                          , wsppHidden          = dynStr
+                          , wsppHiddenNoWindows = const empty
+                          , wsppUrgent          = \x -> dynStr $ "*" ++ x ++ "*"
+                          , wsppSep             = dynStr " "
                           , wsppSort            = id
                           }
 
 data WindowPP = WPP { wppTitle :: String -> DynamicDoc }
 
 defaultWindowPP :: WindowPP
-defaultWindowPP = WPP { wppTitle = DynStr }
+defaultWindowPP = WPP { wppTitle = dynStr }
 
 data LayoutPP = LPP { lppTitle :: String -> DynamicDoc }
 
 defaultLayoutPP :: LayoutPP
-defaultLayoutPP = LPP { lppTitle = DynStr }
+defaultLayoutPP = LPP { lppTitle = dynStr }
+
+liftDynamicDoc :: (String -> String) -> (DynamicDoc -> DynamicDoc)
+liftDynamicDoc f = ((text . f . renderStatusBar) .$.)
 
 -- | An (m DynStr) containing the date.
 date :: MonadIO m => m DynamicDoc
-date = do
-  theDate <- runProcess ("date", [])
-  return $ DynStr . init $ theDate
+date = 
+  let
+    dateDynDoc = dynProc ("date", [])
+  in
+    return $ init' dateDynDoc
+  where 
+    init' = liftDynamicDoc init
 
 -- | An (m DynStr) containing the battery percentage, without a percent sign.
 battery :: MonadIO m => m DynamicDoc
-battery = do
-  acpiStr <- runProcess ("acpi", [])
-  return $ DynStr . (takeWhile (/= '%')) . (!! 3) . words $ acpiStr
+battery = 
+  let 
+    acpiDynDoc = dynProc ("acpi", [])
+  in
+    return $ (text . (takeWhile (/= '%')) . (!! 3) . words . renderStatusBar) .$. acpiDynDoc
 
 -- | An (m DynStr) containing the battery percentage, with a percent sign.
 batteryPercentage :: MonadIO m => m DynamicDoc
 batteryPercentage = do
   bat <- battery
-  return $ bat <> DynStr "%"
+  return $ bat .+. dynStr "%"
 
 sepBy :: DynamicDoc   -- ^ separator
          -> [DynamicDoc] -- ^ fields to output
          -> DynamicDoc
-sepBy sep = mconcat . intersperse sep . filter (not . (== mempty))
+sepBy sep = magSum . intersperse sep . filter (not . isEmpty)
+  where
+    isEmpty (Compound ([], _)) = True
+    isEmpty _ = False
 
 -- | (Adapted from pprWindowSet from XMonad.Hooks.DynamicLog.)
 workspaces :: WorkspacePP -> X DynamicDoc
@@ -105,4 +120,8 @@ defaultLayoutTitle :: X DynamicDoc
 defaultLayoutTitle = layoutTitle defaultLayoutPP
 
 myPracticeThing :: X DynamicDoc
-myPracticeThing = defaultWindowTitle <> defaultLayoutTitle <> defaultWorkspaces
+myPracticeThing = do
+  dwt <- defaultWindowTitle 
+  dlt <- defaultLayoutTitle 
+  dw  <-defaultWorkspaces
+  return $ dwt .+. dlt .+. dw 

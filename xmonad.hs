@@ -103,7 +103,7 @@ dzen2 :: LayoutClass l Window =>
 dzen2 config = do
   d <- date
   b <- battery
-  dynamicStatusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" (b <> d) (const (mod4Mask, xK_P)) config
+  dynamicStatusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" (magSum [b, dynStr " | ", d]) (const (mod4Mask, xK_P)) config
 
 -- MAIN
 main = do

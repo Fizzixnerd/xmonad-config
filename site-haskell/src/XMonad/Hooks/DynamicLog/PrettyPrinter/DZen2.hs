@@ -11,7 +11,7 @@ import XMonad.Hooks.ManageDocks hiding (R)
 
 import XMonad.Layout.LayoutModifier
 
-import Text.PrettyPrint hiding (sep, (<+>))
+import Text.PrettyPrint hiding (sep, (<+>), empty)
 
 import Data.List
 import qualified Data.Map as M
@@ -249,8 +249,8 @@ ppCommand ScrollEnd = scrollEndDoc
 ppCommand Exit = exitDoc
 
 ppPosition :: Position -> Doc
-ppPosition HERE = empty
-ppPosition RESET_Y = empty
+ppPosition HERE = mempty
+ppPosition RESET_Y = mempty
 ppPosition p = zeroWidthText $ show p
 
 ppMouseButton :: MouseButton -> Doc
@@ -275,13 +275,13 @@ delimitedCommand com sep args enclosed closer =
 
 dzen2DelimitedCommand :: Command -> Doc -> [Argument] -> Doc -> DynamicDoc
 dzen2DelimitedCommand com sep args enclosed = 
-  DynDoc $ delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
+  dynDoc $ delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
 
 simpleCommand :: Doc -> Doc -> [Doc] -> Doc
 simpleCommand com sep args = com <> (parens $ hcat $ intersperse sep args)
 
 dzen2SimpleCommand :: Command -> Doc -> [Argument] -> DynamicDoc
-dzen2SimpleCommand com sep args = DynDoc $ simpleCommand (ppCommand com) sep $ map ppArgument args
+dzen2SimpleCommand com sep args = dynDoc $ simpleCommand (ppCommand com) sep $ map ppArgument args
 
 pSep :: Doc
 pSep = zeroWidthText ";"
@@ -299,13 +299,13 @@ pa :: Position -> Position -> DynamicDoc
 pa xpos ypos = dzen2SimpleCommand PA pSep $ map PosArg [xpos, ypos]
 
 fg :: Color -> Doc -> DynamicDoc
-fg color content = dzen2DelimitedCommand FG empty [ColorArg color] content
+fg color content = dzen2DelimitedCommand FG mempty [ColorArg color] content
 
 bg :: Color -> Doc -> DynamicDoc
-bg color content = dzen2DelimitedCommand BG empty [ColorArg color] content
+bg color content = dzen2DelimitedCommand BG mempty [ColorArg color] content
 
 i :: FilePath -> DynamicDoc
-i iconFilePath = dzen2SimpleCommand I empty [FilePathArg iconFilePath]
+i iconFilePath = dzen2SimpleCommand I mempty [FilePathArg iconFilePath]
 
 r :: Int -> Int -> DynamicDoc
 r w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
@@ -314,53 +314,53 @@ ro :: Int -> Int -> DynamicDoc
 ro w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
 
 c :: Int -> DynamicDoc
-c r = dzen2SimpleCommand C empty [DimArg r]
+c r = dzen2SimpleCommand C mempty [DimArg r]
 
 co :: Int -> DynamicDoc
-co r = dzen2SimpleCommand CO empty [DimArg r]
+co r = dzen2SimpleCommand CO mempty [DimArg r]
 
 ca :: MouseButton -> ShellCommand -> Doc -> DynamicDoc
 ca mb sc content = dzen2DelimitedCommand CA clickableSep [MouseButtonArg mb, ShellCommandArg sc] content
 
 toggleCollapse :: DynamicDoc 
-toggleCollapse = dzen2SimpleCommand ToggleCollapse empty []
+toggleCollapse = dzen2SimpleCommand ToggleCollapse mempty []
 
 collapse :: DynamicDoc
-collapse = dzen2SimpleCommand Collapse empty []
+collapse = dzen2SimpleCommand Collapse mempty []
 
 uncollapse :: DynamicDoc
-uncollapse = dzen2SimpleCommand Uncollapse empty []
+uncollapse = dzen2SimpleCommand Uncollapse mempty []
 
 toggleStick :: DynamicDoc
-toggleStick = dzen2SimpleCommand ToggleStick empty []
+toggleStick = dzen2SimpleCommand ToggleStick mempty []
 
 stick :: DynamicDoc
-stick = dzen2SimpleCommand Stick empty []
+stick = dzen2SimpleCommand Stick mempty []
 
 unstick :: DynamicDoc
-unstick = dzen2SimpleCommand Unstick empty []
+unstick = dzen2SimpleCommand Unstick mempty []
 
 toggleHide :: DynamicDoc
-toggleHide = dzen2SimpleCommand ToggleHide empty []
+toggleHide = dzen2SimpleCommand ToggleHide mempty []
 
 hide :: DynamicDoc
-hide = dzen2SimpleCommand Hide empty []
+hide = dzen2SimpleCommand Hide mempty []
 
 unhide :: DynamicDoc
-unhide = dzen2SimpleCommand Unhide empty []
+unhide = dzen2SimpleCommand Unhide mempty []
 
 raise :: DynamicDoc
-raise = dzen2SimpleCommand Raise empty []
+raise = dzen2SimpleCommand Raise mempty []
 
 lower :: DynamicDoc
-lower = dzen2SimpleCommand Lower empty []
+lower = dzen2SimpleCommand Lower mempty []
 
 scrollHome :: DynamicDoc
-scrollHome = dzen2SimpleCommand ScrollHome empty []
+scrollHome = dzen2SimpleCommand ScrollHome mempty []
 
 scrollEnd :: DynamicDoc
-scrollEnd = dzen2SimpleCommand ScrollEnd empty []
+scrollEnd = dzen2SimpleCommand ScrollEnd mempty []
 
 exit :: DynamicDoc
-exit = dzen2SimpleCommand Exit empty []
+exit = dzen2SimpleCommand Exit mempty []
 
