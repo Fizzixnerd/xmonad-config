@@ -51,7 +51,7 @@ defaultLayoutPP = LPP { lppTitle = dynStr }
 liftDynamicDoc :: (String -> String) -> (DynamicDoc -> DynamicDoc)
 liftDynamicDoc f = ((text . f . renderStatusBar) .$.)
 
--- | An (m DynStr) containing the date.
+-- | An (m DynamicDoc) containing the date.
 date :: MonadIO m => m DynamicDoc
 date = 
   let
@@ -61,16 +61,16 @@ date =
   where 
     init' = liftDynamicDoc init
 
--- | An (m DynStr) containing the battery percentage, without a percent sign.
-battery :: MonadIO m => m DynamicDoc
+-- | An (m DynamicDoc) containing the battery percentage, without a percent sign.
+battery :: X DynamicDoc
 battery = 
   let 
     acpiDynDoc = dynProc ("acpi", [])
   in
-    return $ (text . (takeWhile (/= '%')) . (!! 3) . words . renderStatusBar) .$. acpiDynDoc
+    return $ liftDynamicDoc ((takeWhile (/= '%')) . (!! 3) . words) acpiDynDoc
 
--- | An (m DynStr) containing the battery percentage, with a percent sign.
-batteryPercentage :: MonadIO m => m DynamicDoc
+-- | An (m DynamicDoc) containing the battery percentage, with a percent sign.
+batteryPercentage :: X DynamicDoc
 batteryPercentage = do
   bat <- battery
   return $ bat .+. dynStr "%"

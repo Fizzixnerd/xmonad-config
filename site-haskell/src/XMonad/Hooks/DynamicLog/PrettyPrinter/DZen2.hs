@@ -64,14 +64,14 @@ dynamicStatusBar :: LayoutClass l Window
                     -> (XConfig Layout -> (KeyMask, KeySym))
                               -- ^ The desired key binding to toggle bar visibility.
                     -> XConfig l -- ^ The base config.
-                    -> IO (XConfig (ModifiedLayout AvoidStruts l))
+                    -> X (XConfig (ModifiedLayout AvoidStruts l))
 dynamicStatusBar cmd doc k conf = do
   h <- spawnPipe cmd
   return $ conf 
     { layoutHook = avoidStruts $ layoutHook conf 
     , logHook    = do
         logHook conf
-        io $ hPrintDynamicDoc h doc
+        hPrintDynamicDoc h doc
     , manageHook = manageHook conf <+> manageDocks 
     , keys       = liftM2 M.union keys' (keys conf)
     }
@@ -273,15 +273,15 @@ delimitedCommand :: Doc -> Doc -> [Doc] -> Doc -> Doc -> Doc
 delimitedCommand com sep args enclosed closer =
   (simpleCommand com sep args) <> enclosed <> closer
 
-dzen2DelimitedCommand :: Command -> Doc -> [Argument] -> Doc -> DynamicDoc
+dzen2DelimitedCommand :: Command -> Doc -> [Argument] -> Doc -> Doc
 dzen2DelimitedCommand com sep args enclosed = 
-  dynDoc $ delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
+  delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
 
 simpleCommand :: Doc -> Doc -> [Doc] -> Doc
 simpleCommand com sep args = com <> (parens $ hcat $ intersperse sep args)
 
-dzen2SimpleCommand :: Command -> Doc -> [Argument] -> DynamicDoc
-dzen2SimpleCommand com sep args = dynDoc $ simpleCommand (ppCommand com) sep $ map ppArgument args
+dzen2SimpleCommand :: Command -> Doc -> [Argument] -> Doc
+dzen2SimpleCommand com sep args = simpleCommand (ppCommand com) sep $ map ppArgument args
 
 pSep :: Doc
 pSep = zeroWidthText ";"
@@ -292,75 +292,75 @@ dimensionSep = zeroWidthText "x"
 clickableSep :: Doc
 clickableSep = zeroWidthText ","
 
-p :: Position -> Position -> DynamicDoc
+p :: Position -> Position -> Doc
 p xpos ypos = dzen2SimpleCommand P pSep $ map PosArg [xpos, ypos]
 
-pa :: Position -> Position -> DynamicDoc
+pa :: Position -> Position -> Doc
 pa xpos ypos = dzen2SimpleCommand PA pSep $ map PosArg [xpos, ypos]
 
-fg :: Color -> Doc -> DynamicDoc
+fg :: Color -> Doc -> Doc
 fg color content = dzen2DelimitedCommand FG mempty [ColorArg color] content
 
-bg :: Color -> Doc -> DynamicDoc
+bg :: Color -> Doc -> Doc
 bg color content = dzen2DelimitedCommand BG mempty [ColorArg color] content
 
-i :: FilePath -> DynamicDoc
+i :: FilePath -> Doc
 i iconFilePath = dzen2SimpleCommand I mempty [FilePathArg iconFilePath]
 
-r :: Int -> Int -> DynamicDoc
+r :: Int -> Int -> Doc
 r w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
 
-ro :: Int -> Int -> DynamicDoc
+ro :: Int -> Int -> Doc
 ro w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
 
-c :: Int -> DynamicDoc
+c :: Int -> Doc
 c r = dzen2SimpleCommand C mempty [DimArg r]
 
-co :: Int -> DynamicDoc
+co :: Int -> Doc
 co r = dzen2SimpleCommand CO mempty [DimArg r]
 
-ca :: MouseButton -> ShellCommand -> Doc -> DynamicDoc
+ca :: MouseButton -> ShellCommand -> Doc -> Doc
 ca mb sc content = dzen2DelimitedCommand CA clickableSep [MouseButtonArg mb, ShellCommandArg sc] content
 
-toggleCollapse :: DynamicDoc 
+toggleCollapse :: Doc 
 toggleCollapse = dzen2SimpleCommand ToggleCollapse mempty []
 
-collapse :: DynamicDoc
+collapse :: Doc
 collapse = dzen2SimpleCommand Collapse mempty []
 
-uncollapse :: DynamicDoc
+uncollapse :: Doc
 uncollapse = dzen2SimpleCommand Uncollapse mempty []
 
-toggleStick :: DynamicDoc
+toggleStick :: Doc
 toggleStick = dzen2SimpleCommand ToggleStick mempty []
 
-stick :: DynamicDoc
+stick :: Doc
 stick = dzen2SimpleCommand Stick mempty []
 
-unstick :: DynamicDoc
+unstick :: Doc
 unstick = dzen2SimpleCommand Unstick mempty []
 
-toggleHide :: DynamicDoc
+toggleHide :: Doc
 toggleHide = dzen2SimpleCommand ToggleHide mempty []
 
-hide :: DynamicDoc
+hide :: Doc
 hide = dzen2SimpleCommand Hide mempty []
 
-unhide :: DynamicDoc
+unhide :: Doc
 unhide = dzen2SimpleCommand Unhide mempty []
 
-raise :: DynamicDoc
+raise :: Doc
 raise = dzen2SimpleCommand Raise mempty []
 
-lower :: DynamicDoc
+lower :: Doc
 lower = dzen2SimpleCommand Lower mempty []
 
-scrollHome :: DynamicDoc
+scrollHome :: Doc
 scrollHome = dzen2SimpleCommand ScrollHome mempty []
 
-scrollEnd :: DynamicDoc
+scrollEnd :: Doc
 scrollEnd = dzen2SimpleCommand ScrollEnd mempty []
 
-exit :: DynamicDoc
+exit :: Doc
 exit = dzen2SimpleCommand Exit mempty []
 

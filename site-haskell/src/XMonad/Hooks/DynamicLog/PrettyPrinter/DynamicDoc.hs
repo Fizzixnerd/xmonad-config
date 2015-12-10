@@ -2,6 +2,7 @@
 
 module XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc where
 
+import XMonad
 import XMonad.Util.Run
 
 import Control.Monad.IO.Class
@@ -54,14 +55,14 @@ dynDoc x = Atom (DynDoc x, id)
 dynProc :: Process -> DynamicDoc
 dynProc x = Atom (DynProc x, id)
 
-runProcess :: MonadIO m => Process -> m String
+runProcess :: Process -> X String
 runProcess (process, args) = runProcessWithInput process args ""
 
-compileDynDoc :: MonadIO m => DynDoc -> m Doc
+compileDynDoc :: DynDoc -> X Doc
 compileDynDoc (DynDoc  d) = return d
 compileDynDoc (DynProc p) = text <$> runProcess p 
 
-compileDynamicDoc :: MonadIO m => DynamicDoc -> m Doc
+compileDynamicDoc :: DynamicDoc -> X Doc
 compileDynamicDoc (Atom      (d, f)) = f <$> compileDynDoc d
 compileDynamicDoc (Compound (ds, f)) = f . mconcat <$> mapM compileDynamicDoc ds
 
@@ -79,11 +80,10 @@ renderStatusBar = renderStyle style
                   , lineLength = maxBound
                   }
 
-dynamicRenderStatusBar :: MonadIO m => DynamicDoc -> m String
+dynamicRenderStatusBar :: DynamicDoc -> X String
 dynamicRenderStatusBar d = renderStatusBar <$> compileDynamicDoc d
 
-hPrintDynamicDoc :: Handle -> DynamicDoc -> IO ()
+hPrintDynamicDoc :: Handle -> DynamicDoc -> X ()
 hPrintDynamicDoc h d = do
   out <- dynamicRenderStatusBar d
-  hPutStrLn h out
-
+  io $ hPutStrLn h out

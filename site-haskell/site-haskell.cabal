@@ -55,6 +55,7 @@ library
                      , XMonad.Hooks.DynamicLog.PrettyPrinter
                      , XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2
                      , XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
+                     , XMonad.Util.IO
   
   -- Modules included in this library but not exported.
   -- other-modules:       
@@ -72,6 +73,7 @@ library
                      , xmonad-contrib >=0.11 && <0.12
                      , pretty >=1.1 && < 1.2
                      , transformers >= 0.4.2 && < 0.5
+                     , mtl >= 2.2.1 && < 2.3
   
   -- Directories containing source files.
   hs-source-dirs:      src
