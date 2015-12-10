@@ -11,80 +11,74 @@ import XMonad.Util.NamedWindows
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
 
-import Text.PrettyPrint hiding (empty)
+import Text.PrettyPrint
 
 import Control.Monad.IO.Class
+import Control.Monad
 
-import Data.Monoid
 import Data.Maybe
 import Data.List (intersperse, init)
 
-data WorkspacePP = WSPP { wsppCurrent         :: WorkspaceId -> DynamicDoc
-                        , wsppVisible         :: WorkspaceId -> DynamicDoc
-                        , wsppHidden          :: WorkspaceId -> DynamicDoc
-                        , wsppHiddenNoWindows :: WorkspaceId -> DynamicDoc
-                        , wsppUrgent          :: WorkspaceId -> DynamicDoc
-                        , wsppSep             :: DynamicDoc
-                        , wsppSort            :: [S.Workspace WorkspaceId (Layout Window) Window] -> [S.Workspace WorkspaceId (Layout Window) Window]
-                        }
+data WorkspacePP m = WSPP { wsppCurrent         :: WorkspaceId -> DynamicDoc m
+                          , wsppVisible         :: WorkspaceId -> DynamicDoc m
+                          , wsppHidden          :: WorkspaceId -> DynamicDoc m
+                          , wsppHiddenNoWindows :: WorkspaceId -> DynamicDoc m
+                          , wsppUrgent          :: WorkspaceId -> DynamicDoc m
+                          , wsppSep             :: Doc
+                          , wsppSort            :: [S.Workspace WorkspaceId (Layout Window) Window] -> [S.Workspace WorkspaceId (Layout Window) Window]
+                          }
 
-defaultWorkspacePP :: WorkspacePP
+defaultWorkspacePP :: (Monoid (m Doc), MonadIO m) => WorkspacePP m
 defaultWorkspacePP = WSPP { wsppCurrent         = \x -> dynStr $ "[" ++ x ++ "]"
                           , wsppVisible         = \x -> dynStr $ "[" ++ x ++ "]"
                           , wsppHidden          = dynStr
-                          , wsppHiddenNoWindows = const empty
+                          , wsppHiddenNoWindows = const mempty
                           , wsppUrgent          = \x -> dynStr $ "*" ++ x ++ "*"
-                          , wsppSep             = dynStr " "
+                          , wsppSep             = text " "
                           , wsppSort            = id
                           }
 
-data WindowPP = WPP { wppTitle :: String -> DynamicDoc }
+data WindowPP m = WPP { wppTitle :: String -> DynamicDoc m }
 
-defaultWindowPP :: WindowPP
+defaultWindowPP :: (MonadIO m) => WindowPP m
 defaultWindowPP = WPP { wppTitle = dynStr }
 
-data LayoutPP = LPP { lppTitle :: String -> DynamicDoc }
+data LayoutPP m = LPP { lppTitle :: String -> DynamicDoc m }
 
-defaultLayoutPP :: LayoutPP
+defaultLayoutPP :: (MonadIO m) => LayoutPP m
 defaultLayoutPP = LPP { lppTitle = dynStr }
 
-liftDynamicDoc :: (String -> String) -> (DynamicDoc -> DynamicDoc)
-liftDynamicDoc f = ((text . f . renderStatusBar) .$.)
+-- | An (DynamicDoc m) containing the date.
+date :: MonadIO m => DynamicDoc m
+date = init' dateDynDoc
+  where init' = fromStrFOL init
+        dateDynDoc = dynProc ("date", [])
 
--- | An (m DynamicDoc) containing the date.
-date :: MonadIO m => m DynamicDoc
-date = 
-  let
-    dateDynDoc = dynProc ("date", [])
-  in
-    return $ init' dateDynDoc
-  where 
-    init' = liftDynamicDoc init
+-- | An (DynamicDoc m) containing the battery percentage, without a percent sign.
+battery :: MonadIO m => DynamicDoc m
+battery = fromStrFOL ((takeWhile (/= '%')) . (!! 3) . words) acpiDynDoc
+  where acpiDynDoc = dynProc ("acpi", [])
 
--- | An (m DynamicDoc) containing the battery percentage, without a percent sign.
-battery :: X DynamicDoc
-battery = 
-  let 
-    acpiDynDoc = dynProc ("acpi", [])
-  in
-    return $ liftDynamicDoc ((takeWhile (/= '%')) . (!! 3) . words) acpiDynDoc
-
--- | An (m DynamicDoc) containing the battery percentage, with a percent sign.
-batteryPercentage :: X DynamicDoc
+-- | An (DynamicDoc m) containing the battery percentage, with a percent sign.
+batteryPercentage :: (MonadIO m, MonadPlus m) => DynamicDoc m
 batteryPercentage = do
   bat <- battery
-  return $ bat .+. dynStr "%"
+  return $ bat <> (text "%")
 
-sepBy :: DynamicDoc   -- ^ separator
-         -> [DynamicDoc] -- ^ fields to output
-         -> DynamicDoc
-sepBy sep = magSum . intersperse sep . filter (not . isEmpty)
-  where
-    isEmpty (Compound ([], _)) = True
-    isEmpty _ = False
+sepBy :: Monad m
+         =>  Doc           -- ^ separator
+         -> [DynamicDoc m] -- ^ fields to output
+         ->  DynamicDoc m
+sepBy sep ds = mconcat <$> intersperse sep . reverse . (foldl (\acc x -> if (x /= empty) then
+                                                                           x : acc
+                                                                         else
+                                                                           acc)
+                                                        []) <$> sequence ds
+
+-- msum . intersperse sep . fmap (\x -> if isEmpty x then
 
 -- | (Adapted from pprWindowSet from XMonad.Hooks.DynamicLog.)
-workspaces :: WorkspacePP -> X DynamicDoc
+workspaces :: WorkspacePP X -> DynamicDoc X
 workspaces wspp = do
   winset  <- gets windowset
   urgents <- readUrgents
@@ -96,32 +90,32 @@ workspaces wspp = do
                       | S.tag w == this                                                   = wsppCurrent
                       | S.tag w `elem` visibles                                           = wsppVisible
                       | isJust (S.stack w)                                                = wsppHidden
-                      | otherwise                                                         = wsppHiddenNoWindows
-  return $ sepBy (wsppSep wspp) . map fmt . sort' $ map S.workspace (S.current winset : S.visible winset) ++ S.hidden winset
+                      | otherwise                                                         = wsppHiddenNoWindows in
+    sepBy (wsppSep wspp) . map fmt . sort' $ map S.workspace (S.current winset : S.visible winset) ++ S.hidden winset
 
-defaultWorkspaces :: X DynamicDoc
+defaultWorkspaces :: DynamicDoc X
 defaultWorkspaces = workspaces defaultWorkspacePP
 
-windowTitle :: WindowPP -> X DynamicDoc
+windowTitle :: WindowPP X -> DynamicDoc X
 windowTitle wpp = do 
   winset <- gets windowset
   wt <- maybe (return "") (fmap show . getName) . S.peek $ winset
-  return $ (wppTitle wpp) $ wt
+  (wppTitle wpp) $ wt
 
-defaultWindowTitle :: X DynamicDoc
+defaultWindowTitle :: DynamicDoc X
 defaultWindowTitle = windowTitle defaultWindowPP
 
-layoutTitle :: LayoutPP -> X DynamicDoc
+layoutTitle :: LayoutPP X -> DynamicDoc X
 layoutTitle lpp = do
   winset <- gets windowset
-  return $ (lppTitle lpp) . description . S.layout . S.workspace . S.current $ winset
+  (lppTitle lpp) . description . S.layout . S.workspace . S.current $ winset
 
-defaultLayoutTitle :: X DynamicDoc
+defaultLayoutTitle :: DynamicDoc X
 defaultLayoutTitle = layoutTitle defaultLayoutPP
 
-myPracticeThing :: X DynamicDoc
+myPracticeThing :: DynamicDoc X
 myPracticeThing = do
   dwt <- defaultWindowTitle 
   dlt <- defaultLayoutTitle 
-  dw  <-defaultWorkspaces
-  return $ dwt .+. dlt .+. dw 
+  dw  <- defaultWorkspaces
+  return $ dwt <> dlt <> dw 

@@ -60,7 +60,7 @@ instance Show Position where
 
 dynamicStatusBar :: LayoutClass l Window
                     => String -- ^ The command line to launch the status bar.
-                    -> DynamicDoc -- ^ The DynamicDoc
+                    -> DynamicDoc X -- ^ The DynamicDoc
                     -> (XConfig Layout -> (KeyMask, KeySym))
                               -- ^ The desired key binding to toggle bar visibility.
                     -> XConfig l -- ^ The base config.

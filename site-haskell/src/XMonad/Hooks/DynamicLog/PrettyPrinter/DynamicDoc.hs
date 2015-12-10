@@ -9,81 +9,70 @@ import Control.Monad.IO.Class
 
 import Text.PrettyPrint hiding (empty)
 
-import System.IO
+import System.IO (FilePath, Handle, hPutStrLn)
 
+type DynamicDoc m = m Doc
 type Process = (FilePath, [String])
 
-data DynDoc = DynDoc Doc
-            | DynProc Process deriving (Show, Eq)
+-- -- | Laws:
+-- -- (i)   process $ f .$. x == f <$> process $ x
+-- -- (ii)  id .$. x == x
+-- -- (iii) (f . g) .$. x == f .$. (g .$. x)
+-- class Processable c a where
+--   (.$.)   :: Magma c => (a -> a) -> c -> c
+--   process :: (MonadIO m, Magma c) => c -> m a
 
-data DynamicDoc = Atom (DynDoc, Doc -> Doc)
-                | Compound ([DynamicDoc], Doc -> Doc)
+-- class Magma a where
+--   (.+.) :: a -> a -> a
+--   magSum :: Container a => [a] -> a
+--   magSum = foldl (\acc x -> acc .+. x) empty
 
--- | Laws:
--- (i)   process $ f .$. x == f <$> process $ x
--- (ii)  id .$. x == x
--- (iii) (f . g) .$. x == f .$. (g .$. x)
-class Processable c a where
-  (.$.)   :: Magma c => (a -> a) -> c -> c
-  process :: (MonadIO m, Magma c) => c -> m a
+-- class Container a where
+--   empty :: a
 
-class Magma a where
-  (.+.) :: a -> a -> a
-  magSum :: Container a => [a] -> a
-  magSum = foldl (\acc x -> acc .+. x) empty
+-- instance Magma DynamicDoc where
+--   x .+. y = Compound ([x, y], id)
 
-class Container a where
-  empty :: a
+-- instance Container DynamicDoc where
+--   empty = Atom (DynDoc mempty, id)
 
-instance Magma DynamicDoc where
-  x .+. y = Compound ([x, y], id)
+-- instance Processable DynamicDoc Doc where
+--   f .$. (Atom     (d, g)) = Atom     (d, f . g)
+--   f .$. (Compound (d, g)) = Compound (d, f . g)
+--   process                 = compileDynamicDoc
 
-instance Container DynamicDoc where
-  empty = Atom (DynDoc mempty, id)
+dynStr :: (Monad m) => String -> DynamicDoc m
+dynStr = return . text
 
-instance Processable DynamicDoc Doc where
-  f .$. (Atom     (d, g)) = Atom     (d, f . g)
-  f .$. (Compound (d, g)) = Compound (d, f . g)
-  process                 = compileDynamicDoc
+dynDoc :: (Monad m) => Doc -> DynamicDoc m
+dynDoc = return
 
-dynStr :: String -> DynamicDoc
-dynStr x = Atom (DynDoc $ text x, id)
+dynProc :: (MonadIO m) => Process -> DynamicDoc m
+dynProc (process, args) = text <$> runProcessWithInput process args ""
 
-dynDoc :: Doc -> DynamicDoc
-dynDoc x = Atom (DynDoc x, id)
+dynAct :: (Monad m) => (a -> Doc) -> m a -> DynamicDoc m
+dynAct f x = f <$> x
 
-dynProc :: Process -> DynamicDoc
-dynProc x = Atom (DynProc x, id)
+renderOneLine :: Doc -> String
+renderOneLine = renderStyle oneLineStyle
 
-runProcess :: Process -> X String
-runProcess (process, args) = runProcessWithInput process args ""
+oneLineStyle :: Style
+oneLineStyle = style 
+               {
+                 mode = OneLineMode
+               , lineLength = maxBound
+               }
 
-compileDynDoc :: DynDoc -> X Doc
-compileDynDoc (DynDoc  d) = return d
-compileDynDoc (DynProc p) = text <$> runProcess p 
+dynamicRenderOneLine :: (Monad m) => DynamicDoc m -> m String
+dynamicRenderOneLine = fmap renderOneLine
 
-compileDynamicDoc :: DynamicDoc -> X Doc
-compileDynamicDoc (Atom      (d, f)) = f <$> compileDynDoc d
-compileDynamicDoc (Compound (ds, f)) = f . mconcat <$> mapM compileDynamicDoc ds
+fromStrF :: (Monad m) => (String -> String) -> Style -> (DynamicDoc m -> DynamicDoc m)
+fromStrF f styl = fmap (text . f . (renderStyle styl))
 
--- compileDynamicDoc (DynDoc d) = return d
--- compileDynamicDoc (DynStr s) = return $ text s
--- compileDynamicDoc (DynProc p) = fmap text $ runProcess p
--- compileDynamicDoc (CompoundDynDoc cdd) = fmap (foldl (\acc x -> acc <> x) empty) 
---                                      $ sequence
---                                      $ fmap compileDynamicDoc cdd
+fromStrFOL :: (Monad m) => (String -> String) -> (DynamicDoc m -> DynamicDoc m)
+fromStrFOL f = fromStrF f oneLineStyle
 
-renderStatusBar :: Doc -> String
-renderStatusBar = renderStyle style 
-                  {
-                    mode = OneLineMode
-                  , lineLength = maxBound
-                  }
-
-dynamicRenderStatusBar :: DynamicDoc -> X String
-dynamicRenderStatusBar d = renderStatusBar <$> compileDynamicDoc d
-
-hPrintDynamicDoc :: Handle -> DynamicDoc -> X ()
+hPrintDynamicDoc :: (MonadIO m) => Handle -> DynamicDoc m -> m ()
 hPrintDynamicDoc h d = do
-  out <- dynamicRenderStatusBar d
-  io $ hPutStrLn h out
+  str <- dynamicRenderOneLine d
+  liftIO $ hPutStrLn h str
