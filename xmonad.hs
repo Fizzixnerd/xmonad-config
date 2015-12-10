@@ -34,6 +34,8 @@ import XMonad.Util.Timer
 import qualified XMonad.Util.ExtensibleState as XS
 import qualified XMonad.Util.Dzen as Dzen
 
+import Text.PrettyPrint
+
 import System.Information.Battery
 
 import System.IO
@@ -74,37 +76,14 @@ myConfig = ewmh $ defaultConfig
   } `additionalKeysP` myKeys
 
 -- DZEN2
-
--- | This is horrible, and needs to be fixed.  Do that.
--- UPDATE: Okay, I've made a library that should make this better.
-
--- order :: [String] -> [String]
--- order (ws:lo:cwt:extras) = "^p(_LEFT)":
---                            ws:
---                            ("^p(_CENTER)^p(-" ++ show (18 * (length (dzenStrip $ lo ++ cwt)) `div` 2) ++ ")"):
---                            lo:
---                            cwt:
---                            ("^p(_RIGHT)^p(-" ++ show (11 * (length $ dzenStrip $ concat extras)) ++ ")"):
---                            extras
-
 dzen2Time :: Logger
 dzen2Time = dzenColorL "green" "black" $ logCmd time
-
--- dzen2PP = defaultPP { ppTitle = const ""
---                     , ppExtras = [dzen2Time, battery]
---                     , ppOrder = order
---                     , ppSep = " "
---                     , ppLayout = last . words
---                     }
 
 dzen2 :: LayoutClass l Window => 
          XConfig l ->
          IO (XConfig (ModifiedLayout AvoidStruts l))
 dzen2 config = do
-  d <- date
-  b <- battery
-  mpt <- myPracticeThing
-  return $ dynamicStatusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" (magSum [b, dynStr " | ", d, mpt]) (const (mod4Mask, xK_P)) config
+  dynamicStatusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" (mconcat [battery, dynStr " | ", date, myPracticeThing]) (const (mod4Mask, xK_P)) config
 
 -- MAIN
 main = do

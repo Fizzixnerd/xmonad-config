@@ -64,7 +64,7 @@ dynamicStatusBar :: LayoutClass l Window
                     -> (XConfig Layout -> (KeyMask, KeySym))
                               -- ^ The desired key binding to toggle bar visibility.
                     -> XConfig l -- ^ The base config.
-                    -> X (XConfig (ModifiedLayout AvoidStruts l))
+                    -> IO (XConfig (ModifiedLayout AvoidStruts l))
 dynamicStatusBar cmd doc k conf = do
   h <- spawnPipe cmd
   return $ conf 
@@ -77,75 +77,6 @@ dynamicStatusBar cmd doc k conf = do
     }
       where
          keys' = (`M.singleton` sendMessage ToggleStruts) . k
-
--- -- | Modifies the given base configuration to launch the given status bar,
--- -- send status information to that bar, and allocate space on the screen edges
--- -- for the bar.
--- statusBar :: LayoutClass l Window
---           => String    -- ^ the command line to launch the status bar
---           -> PP        -- ^ the pretty printing options
---           -> (XConfig Layout -> (KeyMask, KeySym))
---                        -- ^ the desired key binding to toggle bar visibility
---           -> XConfig l -- ^ the base config
---           -> IO (XConfig (ModifiedLayout AvoidStruts l))
--- statusBar cmd pp k conf = do
---     h <- spawnPipe cmd
---     return $ conf
---         { layoutHook = avoidStruts (layoutHook conf)
---         , logHook = do
---               logHook conf
---               dynamicLogWithPP pp { ppOutput = hPutStrLn h }
---         , manageHook = manageHook conf <+> manageDocks
---         , keys       = liftM2 M.union keys' (keys conf)
---         }
---  where
---     keys' = (`M.singleton` sendMessage ToggleStruts) . k
-
--- -- | The same as 'dynamicLogWithPP', except it simply returns the status
--- --   as a formatted string without actually printing it to stdout, to
--- --   allow for further processing, or use in some application other than
--- --   a status bar.
--- dynamicLogString :: PP -> X String
--- dynamicLogString pp = do
-
---      winset <- gets windowset
---      urgents <- readUrgents
---      sort' <- ppSort pp
-
---      -- layout description
---      let ld = description . S.layout . S.workspace . S.current $ winset
-
---      -- workspace list
---      let ws = pprWindowSet sort' urgents pp winset
-
---      -- window title
---      wt <- maybe (return "") (fmap show . getName) . S.peek $ winset
-
---      -- run extra loggers, ignoring any that generate errors.
---      extras <- mapM (flip catchX (return Nothing)) $ ppExtras pp
-
---      return $ encodeString . sepBy (ppSep pp) . ppOrder pp $
---                          [ ws
---                          , ppLayout pp ld
---                          , ppTitle  pp wt
---                          ]
---                          ++ catMaybes extras
-
--- -- | Format the workspace information, given a workspace sorting function,
--- --   a list of urgent windows, a pretty-printer format, and the current
--- --   WindowSet.
--- 
--- pprWindowSet sort' urgents pp s = sepBy (ppWsSep pp) . map fmt . sort' $
---                                   map S.workspace (S.current s : S.visible s) ++ S.hidden s
---     where this     = S.currentTag s
---           visibles = map (S.tag . S.workspace) (S.visible s)
-
---           fmt w = printer pp (S.tag w)
---            where printer | any (\x -> maybe False (== S.tag w) (S.findTag x s)) urgents  = ppUrgent
---                          | S.tag w == this                                               = ppCurrent
---                          | S.tag w `elem` visibles                                       = ppVisible
---                          | isJust (S.stack w)                                            = ppHidden
---                          | otherwise                                                     = ppHiddenNoWindows
 
 escape :: Doc
 escape = zeroWidthText "^"
