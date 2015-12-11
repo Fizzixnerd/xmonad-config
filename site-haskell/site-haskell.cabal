@@ -56,6 +56,8 @@ library
                      , XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2
                      , XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
                      , XMonad.Util.IO
+                     , XMonad.Hooks.DynamicLog.Status.StatusText
+                     , XMonad.Hooks.DynamicLog.Status.DZen2.Universal
   
   -- Modules included in this library but not exported.
   -- other-modules:       

@@ -295,3 +295,16 @@ scrollEnd = dzen2SimpleCommand ScrollEnd mempty []
 exit :: Doc
 exit = dzen2SimpleCommand Exit mempty []
 
+-- Extensions
+colorBattery :: Int -> (Doc -> Doc)
+colorBattery x
+  | (x < 15)  = fg "red"
+  | (x < 50)  = fg "yellow"
+  | (x < 90)  = fg "green"
+  | otherwise = fg "blue"
+
+coloredBattery :: (MonadIO m) => DynamicDoc m
+coloredBattery = do
+  batDoc <- battery
+  let b = renderOneLine batDoc
+  return $ (colorBattery $ read b) $ batDoc

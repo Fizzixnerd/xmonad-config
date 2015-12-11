@@ -83,7 +83,7 @@ dzen2 :: LayoutClass l Window =>
          XConfig l ->
          IO (XConfig (ModifiedLayout AvoidStruts l))
 dzen2 config = do
-  dynamicStatusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" (mconcat [battery, dynStr " | ", date, myPracticeThing]) (const (mod4Mask, xK_P)) config
+  dynamicStatusBar "dzen2 -fn 'Droid Sans Mono:style=Regular' -ta c -w 1920" (sepBy (text " | ") [coloredBattery, (fg "red") <$> date, myPracticeThing]) (const (mod4Mask, xK_P)) config
 
 -- MAIN
 main = do

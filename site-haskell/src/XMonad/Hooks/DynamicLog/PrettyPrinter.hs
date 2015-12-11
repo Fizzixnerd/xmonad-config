@@ -1,4 +1,3 @@
-
 module XMonad.Hooks.DynamicLog.PrettyPrinter where
 
 import XMonad hiding (workspaces)
@@ -10,6 +9,7 @@ import XMonad.Util.NamedWindows
 
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
+import XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2
 
 import Text.PrettyPrint
 
@@ -47,6 +47,9 @@ data LayoutPP m = LPP { lppTitle :: String -> DynamicDoc m }
 
 defaultLayoutPP :: (MonadIO m) => LayoutPP m
 defaultLayoutPP = LPP { lppTitle = dynStr }
+
+simpleLayoutPP :: (MonadIO m) => LayoutPP m
+simpleLayoutPP =  LPP { lppTitle = dynStr . last . words }
 
 -- | An (DynamicDoc m) containing the date.
 date :: MonadIO m => DynamicDoc m
@@ -113,9 +116,6 @@ layoutTitle lpp = do
 defaultLayoutTitle :: DynamicDoc X
 defaultLayoutTitle = layoutTitle defaultLayoutPP
 
-myPracticeThing :: DynamicDoc X
-myPracticeThing = do
-  dwt <- defaultWindowTitle 
-  dlt <- defaultLayoutTitle 
-  dw  <- defaultWorkspaces
-  return $ dwt <> dlt <> dw 
+simpleLayoutTitle :: DynamicDoc X
+simpleLayoutTitle = layoutTitle simpleLayoutPP
+
