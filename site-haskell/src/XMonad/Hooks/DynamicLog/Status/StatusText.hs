@@ -37,3 +37,9 @@ tags st = (p, s)
 -- content respectively.
 makeStatusText :: [T.Text] -> [T.Text] -> T.Text -> StatusText
 makeStatusText p s c = writer (c, (p, Dual s))
+
+simpleStatusText :: T.Text -> StatusText
+simpleStatusText = return
+
+dynST :: Monad m => T.Text -> m StatusText
+dynST = return . simpleStatusText

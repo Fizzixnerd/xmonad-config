@@ -2,309 +2,237 @@
 
 module XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2 where
 
-import XMonad hiding (Color, Position, Status, Hide)
-
-import XMonad.Util.Run
-
-import XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
-import XMonad.Hooks.ManageDocks hiding (R)
-
-import XMonad.Layout.LayoutModifier
-
-import Text.PrettyPrint hiding (sep, (<+>), empty)
-
-import Data.List
-import qualified Data.Map as M
-import Control.Monad (liftM2)
-
-
-data Position = LEFT | RIGHT | CENTER 
-              | VALUE Int 
-              | HERE 
-              | RESET_Y 
-              | LOCK_X | UNLOCK_X 
-              | TOP | BOTTOM
-data MouseButton = LeftMB | MiddleMB | RightMB
-data Command  = P | PA 
-              | FG | BG 
-              | I | R | RO | C | CO 
-              | CA
-              | ToggleCollapse | Collapse | Uncollapse
-              | ToggleStick | Stick | Unstick
-              | ToggleHide | Hide | Unhide
-              | Raise | Lower
-              | ScrollHome | ScrollEnd
-              | Exit
-data Argument = PosArg Position 
-              | ColorArg Color 
-              | FilePathArg FilePath 
-              | DimArg Int 
-              | MouseButtonArg MouseButton 
-              | ShellCommandArg ShellCommand
-
-type ShellCommand = String
-type Color = String
-type Status = (Doc, Doc, Doc)
-
-instance Show Position where
-  show LEFT = "_LEFT"
-  show RIGHT = "_RIGHT"
-  show CENTER = "_CENTER"
-  show (VALUE v) = show v
-  show HERE = ""
-  show RESET_Y = ""
-  show LOCK_X = "_LOCK_X"
-  show UNLOCK_X = "_UNLOCK_X"
-  show TOP = "_TOP"
-  show BOTTOM = "_BOTTOM"
-
-dynamicStatusBar :: LayoutClass l Window
-                    => String -- ^ The command line to launch the status bar.
-                    -> DynamicDoc X -- ^ The DynamicDoc
-                    -> (XConfig Layout -> (KeyMask, KeySym))
-                              -- ^ The desired key binding to toggle bar visibility.
-                    -> XConfig l -- ^ The base config.
-                    -> IO (XConfig (ModifiedLayout AvoidStruts l))
-dynamicStatusBar cmd doc k conf = do
-  h <- spawnPipe cmd
-  return $ conf 
-    { layoutHook = avoidStruts $ layoutHook conf 
-    , logHook    = do
-        logHook conf
-        hPrintDynamicDoc h doc
-    , manageHook = manageHook conf <+> manageDocks 
-    , keys       = liftM2 M.union keys' (keys conf)
-    }
-      where
-         keys' = (`M.singleton` sendMessage ToggleStruts) . k
-
-escape :: Doc
-escape = zeroWidthText "^"
-
-pDoc :: Doc
-pDoc = escape <> zeroWidthText "p"
-
-paDoc :: Doc
-paDoc = escape <> zeroWidthText "pa"
-
-fgDoc :: Doc
-fgDoc = escape <> zeroWidthText "fg"
-
-bgDoc :: Doc
-bgDoc = escape <> zeroWidthText "bg"
-
-iDoc :: Doc
-iDoc = escape <> zeroWidthText "i"
-
-rDoc :: Doc
-rDoc = escape <> zeroWidthText "r"
-
-roDoc :: Doc
-roDoc = escape <> zeroWidthText "ro"
-
-cDoc :: Doc
-cDoc = escape <> zeroWidthText "c"
-
-coDoc :: Doc
-coDoc = escape <> zeroWidthText "co"
-
-caDoc :: Doc
-caDoc = escape <> zeroWidthText "ca"
-
-toggleCollapseDoc :: Doc
-toggleCollapseDoc = escape <> zeroWidthText "togglecollapse"
-
-collapseDoc :: Doc
-collapseDoc = escape <> zeroWidthText "collapse"
-
-uncollapseDoc :: Doc
-uncollapseDoc = escape <> zeroWidthText "uncollapse"
-
-toggleStickDoc :: Doc
-toggleStickDoc = escape <> zeroWidthText "togglestick"
-
-stickDoc :: Doc
-stickDoc = escape <> zeroWidthText "stick"
-
-unstickDoc :: Doc
-unstickDoc = escape <> zeroWidthText "unstick"
-
-toggleHideDoc :: Doc
-toggleHideDoc = escape <> zeroWidthText "togglehide"
-
-hideDoc :: Doc
-hideDoc = escape <> zeroWidthText "hide"
-
-unhideDoc :: Doc
-unhideDoc = escape <> zeroWidthText "unhide"
-
-raiseDoc :: Doc
-raiseDoc = escape <> zeroWidthText "raise"
-
-lowerDoc :: Doc
-lowerDoc = escape <> zeroWidthText "lower"
-
-scrollHomeDoc :: Doc
-scrollHomeDoc = escape <> zeroWidthText "scrollhome"
+-- import XMonad hiding (Color, Position, Status, Hide)
 
-scrollEndDoc :: Doc
-scrollEndDoc = escape <> zeroWidthText "scrollend"
+-- import XMonad.Util.Run
 
-exitDoc :: Doc
-exitDoc = escape <> zeroWidthText "exit"
+-- import XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
+-- import XMonad.Hooks.ManageDocks hiding (R)
 
-ppCommand :: Command -> Doc
-ppCommand P = pDoc
-ppCommand PA = paDoc
-ppCommand FG = fgDoc
-ppCommand BG = bgDoc
-ppCommand I = iDoc
-ppCommand R = rDoc
-ppCommand RO = roDoc
-ppCommand C = cDoc
-ppCommand CO = coDoc
-ppCommand CA = caDoc
-ppCommand ToggleCollapse = toggleCollapseDoc
-ppCommand Collapse = collapseDoc
-ppCommand Uncollapse = uncollapseDoc
-ppCommand ToggleStick = toggleStickDoc
-ppCommand Stick = stickDoc
-ppCommand Unstick = unstickDoc
-ppCommand ToggleHide = toggleHideDoc
-ppCommand Hide = hideDoc
-ppCommand Unhide = unhideDoc
-ppCommand Raise = raiseDoc
-ppCommand Lower = lowerDoc
-ppCommand ScrollHome = scrollHomeDoc
-ppCommand ScrollEnd = scrollEndDoc
-ppCommand Exit = exitDoc
+-- import XMonad.Layout.LayoutModifier
 
-ppPosition :: Position -> Doc
-ppPosition HERE = mempty
-ppPosition RESET_Y = mempty
-ppPosition p = zeroWidthText $ show p
+-- import Text.PrettyPrint hiding (sep, (<+>), empty)
 
-ppMouseButton :: MouseButton -> Doc
-ppMouseButton LeftMB = zeroWidthText "1"
-ppMouseButton RightMB = zeroWidthText "2"
-ppMouseButton MiddleMB = zeroWidthText "3"
+-- import Data.List
+-- import qualified Data.Map as M
+-- import Control.Monad (liftM2)
 
-ppShellCommand :: ShellCommand -> Doc
-ppShellCommand sc = zeroWidthText sc
 
-ppArgument :: Argument -> Doc
-ppArgument (PosArg p) = ppPosition p
-ppArgument (ColorArg c) = zeroWidthText c
-ppArgument (FilePathArg fp) = zeroWidthText fp
-ppArgument (DimArg i) = zeroWidthText $ show i
-ppArgument (MouseButtonArg mb) = ppMouseButton mb
-ppArgument (ShellCommandArg sc) = ppShellCommand sc
+-- escape :: Doc
+-- escape = zeroWidthText "^"
 
-delimitedCommand :: Doc -> Doc -> [Doc] -> Doc -> Doc -> Doc
-delimitedCommand com sep args enclosed closer =
-  (simpleCommand com sep args) <> enclosed <> closer
+-- pDoc :: Doc
+-- pDoc = escape <> zeroWidthText "p"
 
-dzen2DelimitedCommand :: Command -> Doc -> [Argument] -> Doc -> Doc
-dzen2DelimitedCommand com sep args enclosed = 
-  delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
+-- paDoc :: Doc
+-- paDoc = escape <> zeroWidthText "pa"
 
-simpleCommand :: Doc -> Doc -> [Doc] -> Doc
-simpleCommand com sep args = com <> (parens $ hcat $ intersperse sep args)
+-- fgDoc :: Doc
+-- fgDoc = escape <> zeroWidthText "fg"
 
-dzen2SimpleCommand :: Command -> Doc -> [Argument] -> Doc
-dzen2SimpleCommand com sep args = simpleCommand (ppCommand com) sep $ map ppArgument args
+-- bgDoc :: Doc
+-- bgDoc = escape <> zeroWidthText "bg"
 
-pSep :: Doc
-pSep = zeroWidthText ";"
+-- iDoc :: Doc
+-- iDoc = escape <> zeroWidthText "i"
 
-dimensionSep :: Doc
-dimensionSep = zeroWidthText "x"
+-- rDoc :: Doc
+-- rDoc = escape <> zeroWidthText "r"
 
-clickableSep :: Doc
-clickableSep = zeroWidthText ","
+-- roDoc :: Doc
+-- roDoc = escape <> zeroWidthText "ro"
 
-p :: Position -> Position -> Doc
-p xpos ypos = dzen2SimpleCommand P pSep $ map PosArg [xpos, ypos]
+-- cDoc :: Doc
+-- cDoc = escape <> zeroWidthText "c"
 
-pa :: Position -> Position -> Doc
-pa xpos ypos = dzen2SimpleCommand PA pSep $ map PosArg [xpos, ypos]
+-- coDoc :: Doc
+-- coDoc = escape <> zeroWidthText "co"
 
-fg :: Color -> Doc -> Doc
-fg color content = dzen2DelimitedCommand FG mempty [ColorArg color] content
+-- caDoc :: Doc
+-- caDoc = escape <> zeroWidthText "ca"
 
-bg :: Color -> Doc -> Doc
-bg color content = dzen2DelimitedCommand BG mempty [ColorArg color] content
+-- toggleCollapseDoc :: Doc
+-- toggleCollapseDoc = escape <> zeroWidthText "togglecollapse"
 
-i :: FilePath -> Doc
-i iconFilePath = dzen2SimpleCommand I mempty [FilePathArg iconFilePath]
+-- collapseDoc :: Doc
+-- collapseDoc = escape <> zeroWidthText "collapse"
 
-r :: Int -> Int -> Doc
-r w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
+-- uncollapseDoc :: Doc
+-- uncollapseDoc = escape <> zeroWidthText "uncollapse"
 
-ro :: Int -> Int -> Doc
-ro w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
+-- toggleStickDoc :: Doc
+-- toggleStickDoc = escape <> zeroWidthText "togglestick"
 
-c :: Int -> Doc
-c r = dzen2SimpleCommand C mempty [DimArg r]
+-- stickDoc :: Doc
+-- stickDoc = escape <> zeroWidthText "stick"
 
-co :: Int -> Doc
-co r = dzen2SimpleCommand CO mempty [DimArg r]
+-- unstickDoc :: Doc
+-- unstickDoc = escape <> zeroWidthText "unstick"
 
-ca :: MouseButton -> ShellCommand -> Doc -> Doc
-ca mb sc content = dzen2DelimitedCommand CA clickableSep [MouseButtonArg mb, ShellCommandArg sc] content
+-- toggleHideDoc :: Doc
+-- toggleHideDoc = escape <> zeroWidthText "togglehide"
 
-toggleCollapse :: Doc 
-toggleCollapse = dzen2SimpleCommand ToggleCollapse mempty []
+-- hideDoc :: Doc
+-- hideDoc = escape <> zeroWidthText "hide"
 
-collapse :: Doc
-collapse = dzen2SimpleCommand Collapse mempty []
+-- unhideDoc :: Doc
+-- unhideDoc = escape <> zeroWidthText "unhide"
 
-uncollapse :: Doc
-uncollapse = dzen2SimpleCommand Uncollapse mempty []
+-- raiseDoc :: Doc
+-- raiseDoc = escape <> zeroWidthText "raise"
 
-toggleStick :: Doc
-toggleStick = dzen2SimpleCommand ToggleStick mempty []
+-- lowerDoc :: Doc
+-- lowerDoc = escape <> zeroWidthText "lower"
 
-stick :: Doc
-stick = dzen2SimpleCommand Stick mempty []
+-- scrollHomeDoc :: Doc
+-- scrollHomeDoc = escape <> zeroWidthText "scrollhome"
 
-unstick :: Doc
-unstick = dzen2SimpleCommand Unstick mempty []
+-- scrollEndDoc :: Doc
+-- scrollEndDoc = escape <> zeroWidthText "scrollend"
 
-toggleHide :: Doc
-toggleHide = dzen2SimpleCommand ToggleHide mempty []
+-- exitDoc :: Doc
+-- exitDoc = escape <> zeroWidthText "exit"
 
-hide :: Doc
-hide = dzen2SimpleCommand Hide mempty []
+-- ppCommand :: Command -> Doc
+-- ppCommand P = pDoc
+-- ppCommand PA = paDoc
+-- ppCommand FG = fgDoc
+-- ppCommand BG = bgDoc
+-- ppCommand I = iDoc
+-- ppCommand R = rDoc
+-- ppCommand RO = roDoc
+-- ppCommand C = cDoc
+-- ppCommand CO = coDoc
+-- ppCommand CA = caDoc
+-- ppCommand ToggleCollapse = toggleCollapseDoc
+-- ppCommand Collapse = collapseDoc
+-- ppCommand Uncollapse = uncollapseDoc
+-- ppCommand ToggleStick = toggleStickDoc
+-- ppCommand Stick = stickDoc
+-- ppCommand Unstick = unstickDoc
+-- ppCommand ToggleHide = toggleHideDoc
+-- ppCommand Hide = hideDoc
+-- ppCommand Unhide = unhideDoc
+-- ppCommand Raise = raiseDoc
+-- ppCommand Lower = lowerDoc
+-- ppCommand ScrollHome = scrollHomeDoc
+-- ppCommand ScrollEnd = scrollEndDoc
+-- ppCommand Exit = exitDoc
 
-unhide :: Doc
-unhide = dzen2SimpleCommand Unhide mempty []
+-- ppPosition :: Position -> Doc
+-- ppPosition HERE = mempty
+-- ppPosition RESET_Y = mempty
+-- ppPosition p = zeroWidthText $ show p
 
-raise :: Doc
-raise = dzen2SimpleCommand Raise mempty []
+-- ppMouseButton :: MouseButton -> Doc
+-- ppMouseButton LeftMB = zeroWidthText "1"
+-- ppMouseButton RightMB = zeroWidthText "2"
+-- ppMouseButton MiddleMB = zeroWidthText "3"
 
-lower :: Doc
-lower = dzen2SimpleCommand Lower mempty []
+-- ppShellCommand :: ShellCommand -> Doc
+-- ppShellCommand sc = zeroWidthText sc
 
-scrollHome :: Doc
-scrollHome = dzen2SimpleCommand ScrollHome mempty []
+-- ppArgument :: Argument -> Doc
+-- ppArgument (PosArg p) = ppPosition p
+-- ppArgument (ColorArg c) = zeroWidthText c
+-- ppArgument (FilePathArg fp) = zeroWidthText fp
+-- ppArgument (DimArg i) = zeroWidthText $ show i
+-- ppArgument (MouseButtonArg mb) = ppMouseButton mb
+-- ppArgument (ShellCommandArg sc) = ppShellCommand sc
 
-scrollEnd :: Doc
-scrollEnd = dzen2SimpleCommand ScrollEnd mempty []
+-- delimitedCommand :: Doc -> Doc -> [Doc] -> Doc -> Doc -> Doc
+-- delimitedCommand com sep args enclosed closer =
+--   (simpleCommand com sep args) <> enclosed <> closer
 
-exit :: Doc
-exit = dzen2SimpleCommand Exit mempty []
+-- dzen2DelimitedCommand :: Command -> Doc -> [Argument] -> Doc -> Doc
+-- dzen2DelimitedCommand com sep args enclosed = 
+--   delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed (simpleCommand (ppCommand com) sep [])
 
--- Extensions
-colorBattery :: Int -> (Doc -> Doc)
-colorBattery x
-  | (x < 15)  = fg "red"
-  | (x < 50)  = fg "yellow"
-  | (x < 90)  = fg "green"
-  | otherwise = fg "blue"
+-- simpleCommand :: Doc -> Doc -> [Doc] -> Doc
+-- simpleCommand com sep args = com <> (parens $ hcat $ intersperse sep args)
 
-coloredBattery :: (MonadIO m) => DynamicDoc m
-coloredBattery = do
-  batDoc <- battery
-  let b = renderOneLine batDoc
-  return $ (colorBattery $ read b) $ batDoc
+-- dzen2SimpleCommand :: Command -> Doc -> [Argument] -> Doc
+-- dzen2SimpleCommand com sep args = simpleCommand (ppCommand com) sep $ map ppArgument args
+
+-- pSep :: Doc
+-- pSep = zeroWidthText ";"
+
+-- dimensionSep :: Doc
+-- dimensionSep = zeroWidthText "x"
+
+-- clickableSep :: Doc
+-- clickableSep = zeroWidthText ","
+
+-- p :: Position -> Position -> Doc
+-- p xpos ypos = dzen2SimpleCommand P pSep $ map PosArg [xpos, ypos]
+
+-- pa :: Position -> Position -> Doc
+-- pa xpos ypos = dzen2SimpleCommand PA pSep $ map PosArg [xpos, ypos]
+
+-- fg :: Color -> Doc -> Doc
+-- fg color content = dzen2DelimitedCommand FG mempty [ColorArg color] content
+
+-- bg :: Color -> Doc -> Doc
+-- bg color content = dzen2DelimitedCommand BG mempty [ColorArg color] content
+
+-- i :: FilePath -> Doc
+-- i iconFilePath = dzen2SimpleCommand I mempty [FilePathArg iconFilePath]
+
+-- r :: Int -> Int -> Doc
+-- r w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
+
+-- ro :: Int -> Int -> Doc
+-- ro w h = dzen2SimpleCommand R dimensionSep $ map DimArg [w, h]
+
+-- c :: Int -> Doc
+-- c r = dzen2SimpleCommand C mempty [DimArg r]
+
+-- co :: Int -> Doc
+-- co r = dzen2SimpleCommand CO mempty [DimArg r]
+
+-- ca :: MouseButton -> ShellCommand -> Doc -> Doc
+-- ca mb sc content = dzen2DelimitedCommand CA clickableSep [MouseButtonArg mb, ShellCommandArg sc] content
+
+-- toggleCollapse :: Doc 
+-- toggleCollapse = dzen2SimpleCommand ToggleCollapse mempty []
+
+-- collapse :: Doc
+-- collapse = dzen2SimpleCommand Collapse mempty []
+
+-- uncollapse :: Doc
+-- uncollapse = dzen2SimpleCommand Uncollapse mempty []
+
+-- toggleStick :: Doc
+-- toggleStick = dzen2SimpleCommand ToggleStick mempty []
+
+-- stick :: Doc
+-- stick = dzen2SimpleCommand Stick mempty []
+
+-- unstick :: Doc
+-- unstick = dzen2SimpleCommand Unstick mempty []
+
+-- toggleHide :: Doc
+-- toggleHide = dzen2SimpleCommand ToggleHide mempty []
+
+-- hide :: Doc
+-- hide = dzen2SimpleCommand Hide mempty []
+
+-- unhide :: Doc
+-- unhide = dzen2SimpleCommand Unhide mempty []
+
+-- raise :: Doc
+-- raise = dzen2SimpleCommand Raise mempty []
+
+-- lower :: Doc
+-- lower = dzen2SimpleCommand Lower mempty []
+
+-- scrollHome :: Doc
+-- scrollHome = dzen2SimpleCommand ScrollHome mempty []
+
+-- scrollEnd :: Doc
+-- scrollEnd = dzen2SimpleCommand ScrollEnd mempty []
+
+-- exit :: Doc
+-- exit = dzen2SimpleCommand Exit mempty []
+
+-- -- Extensions

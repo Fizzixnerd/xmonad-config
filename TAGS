@@ -1,0 +1,613 @@
+
+./xmonad.hs,286
+module Main Main3,4
+myWorkspaces myWorkspaces31,32
+myGenericKeys myGenericKeys35,36
+myMultimediaKeys myMultimediaKeys43,44
+myKeys myKeys48,49
+myConfig myConfig52,53
+dzen2Time dzen2Time64,65
+dzen2Time dzen2Time65,66
+dzen2 dzen267,68
+dzen2 dzen270,71
+main main79,80
+
+./dzen.hs,169
+dzenFont dzenFont0,1
+dzenFont dzenFont1,2
+myDzenConfig myDzenConfig3,4
+dzen2Time dzen2Time5,6
+dzen2Time dzen2Time6,7
+dzen2PP dzen2PP10,11
+dzen2 dzen214,15
+
+./Battery.hs,4268
+module Battery Battery4,5
+data BatteryContext BatteryContext29,30
+data BatteryContext = BC BC29,30
+data BatteryType BatteryType31,32
+data BatteryType = BatteryTypeUnknownBatteryTypeUnknown31,32
+                 | BatteryTypeLinePowerBatteryTypeLinePower32,33
+                 | BatteryTypeBatteryTypeBatteryTypeBatteryType33,34
+                 | BatteryTypeUpsBatteryTypeUps34,35
+                 | BatteryTypeMonitorBatteryTypeMonitor35,36
+                 | BatteryTypeMouseBatteryTypeMouse36,37
+                 | BatteryTypeKeyboardBatteryTypeKeyboard37,38
+                 | BatteryTypePdaBatteryTypePda38,39
+                 | BatteryTypePhoneBatteryTypePhone39,40
+data BatteryState BatteryState42,43
+data BatteryState = BatteryStateUnknownBatteryStateUnknown42,43
+                  | BatteryStateChargingBatteryStateCharging43,44
+                  | BatteryStateDischargingBatteryStateDischarging44,45
+                  | BatteryStateEmptyBatteryStateEmpty45,46
+                  | BatteryStateFullyChargedBatteryStateFullyCharged46,47
+                  | BatteryStatePendingChargeBatteryStatePendingCharge47,48
+                  | BatteryStatePendingDischargeBatteryStatePendingDischarge48,49
+data BatteryTechnology BatteryTechnology51,52
+data BatteryTechnology = BatteryTechnologyUnknownBatteryTechnologyUnknown51,52
+                       | BatteryTechnologyLithiumIonBatteryTechnologyLithiumIon52,53
+                       | BatteryTechnologyLithiumPolymerBatteryTechnologyLithiumPolymer53,54
+                       | BatteryTechnologyLithiumIronPhosphateBatteryTechnologyLithiumIronPhosphate54,55
+                       | BatteryTechnologyLeadAcidBatteryTechnologyLeadAcid55,56
+                       | BatteryTechnologyNickelCadmiumBatteryTechnologyNickelCadmium56,57
+                       | BatteryTechnologyNickelMetalHydrideBatteryTechnologyNickelMetalHydride57,58
+data BatteryInfo BatteryInfo62,63
+data BatteryInfo = BatteryInfo BatteryInfo62,63
+data BatteryInfo = BatteryInfo { batteryNativePath batteryNativePath62,63
+                               , batteryVendor batteryVendor63,64
+                               , batteryModel batteryModel64,65
+                               , batterySerial batterySerial65,66
+                               , batteryType batteryType67,68
+                               , batteryPowerSupply batteryPowerSupply68,69
+                               , batteryHasHistory batteryHasHistory69,70
+                               , batteryHasStatistics batteryHasStatistics70,71
+                               , batteryOnline batteryOnline71,72
+                               , batteryEnergy batteryEnergy72,73
+                               , batteryEnergyEmpty batteryEnergyEmpty73,74
+                               , batteryEnergyFull batteryEnergyFull74,75
+                               , batteryEnergyFullDesign batteryEnergyFullDesign75,76
+                               , batteryEnergyRate batteryEnergyRate76,77
+                               , batteryVoltage batteryVoltage77,78
+                               , batteryTimeToEmpty batteryTimeToEmpty78,79
+                               , batteryTimeToFull batteryTimeToFull79,80
+                               , batteryPercentage batteryPercentage80,81
+                               , batteryIsPresent batteryIsPresent81,82
+                               , batteryState batteryState82,83
+                               , batteryIsRechargable batteryIsRechargable83,84
+                               , batteryCapacity batteryCapacity84,85
+                               , batteryTechnology batteryTechnology85,86
+firstBattery firstBattery94,95
+firstBattery firstBattery95,96
+powerBusName powerBusName98,99
+powerBusName powerBusName99,100
+powerBaseObjectPath powerBaseObjectPath102,103
+powerBaseObjectPath powerBaseObjectPath103,104
+readDict readDict107,108
+readDict readDict108,109
+readDictIntegral readDictIntegral113,114
+readDictIntegral readDictIntegral114,115
+getBatteryInfo getBatteryInfo132,133
+getBatteryInfo getBatteryInfo133,134
+batteryContextNew batteryContextNew173,174
+batteryContextNew batteryContextNew174,175
+
+./site-haskell/src/System/Information/Battery.hs,4306
+module System.Information.Battery System.Information.Battery4,5
+data BatteryContext BatteryContext29,30
+data BatteryContext = BC BC29,30
+data BatteryType BatteryType31,32
+data BatteryType = BatteryTypeUnknownBatteryTypeUnknown31,32
+                 | BatteryTypeLinePowerBatteryTypeLinePower32,33
+                 | BatteryTypeBatteryTypeBatteryTypeBatteryType33,34
+                 | BatteryTypeUpsBatteryTypeUps34,35
+                 | BatteryTypeMonitorBatteryTypeMonitor35,36
+                 | BatteryTypeMouseBatteryTypeMouse36,37
+                 | BatteryTypeKeyboardBatteryTypeKeyboard37,38
+                 | BatteryTypePdaBatteryTypePda38,39
+                 | BatteryTypePhoneBatteryTypePhone39,40
+data BatteryState BatteryState42,43
+data BatteryState = BatteryStateUnknownBatteryStateUnknown42,43
+                  | BatteryStateChargingBatteryStateCharging43,44
+                  | BatteryStateDischargingBatteryStateDischarging44,45
+                  | BatteryStateEmptyBatteryStateEmpty45,46
+                  | BatteryStateFullyChargedBatteryStateFullyCharged46,47
+                  | BatteryStatePendingChargeBatteryStatePendingCharge47,48
+                  | BatteryStatePendingDischargeBatteryStatePendingDischarge48,49
+data BatteryTechnology BatteryTechnology51,52
+data BatteryTechnology = BatteryTechnologyUnknownBatteryTechnologyUnknown51,52
+                       | BatteryTechnologyLithiumIonBatteryTechnologyLithiumIon52,53
+                       | BatteryTechnologyLithiumPolymerBatteryTechnologyLithiumPolymer53,54
+                       | BatteryTechnologyLithiumIronPhosphateBatteryTechnologyLithiumIronPhosphate54,55
+                       | BatteryTechnologyLeadAcidBatteryTechnologyLeadAcid55,56
+                       | BatteryTechnologyNickelCadmiumBatteryTechnologyNickelCadmium56,57
+                       | BatteryTechnologyNickelMetalHydrideBatteryTechnologyNickelMetalHydride57,58
+data BatteryInfo BatteryInfo62,63
+data BatteryInfo = BatteryInfo BatteryInfo62,63
+data BatteryInfo = BatteryInfo { batteryNativePath batteryNativePath62,63
+                               , batteryVendor batteryVendor63,64
+                               , batteryModel batteryModel64,65
+                               , batterySerial batterySerial65,66
+                               , batteryType batteryType67,68
+                               , batteryPowerSupply batteryPowerSupply68,69
+                               , batteryHasHistory batteryHasHistory69,70
+                               , batteryHasStatistics batteryHasStatistics70,71
+                               , batteryOnline batteryOnline71,72
+                               , batteryEnergy batteryEnergy72,73
+                               , batteryEnergyEmpty batteryEnergyEmpty73,74
+                               , batteryEnergyFull batteryEnergyFull74,75
+                               , batteryEnergyFullDesign batteryEnergyFullDesign75,76
+                               , batteryEnergyRate batteryEnergyRate76,77
+                               , batteryVoltage batteryVoltage77,78
+                               , batteryTimeToEmpty batteryTimeToEmpty78,79
+                               , batteryTimeToFull batteryTimeToFull79,80
+                               , batteryPercentage batteryPercentage80,81
+                               , batteryIsPresent batteryIsPresent81,82
+                               , batteryState batteryState82,83
+                               , batteryIsRechargable batteryIsRechargable83,84
+                               , batteryCapacity batteryCapacity84,85
+                               , batteryTechnology batteryTechnology85,86
+firstBattery firstBattery94,95
+firstBattery firstBattery95,96
+powerBusName powerBusName98,99
+powerBusName powerBusName99,100
+powerBaseObjectPath powerBaseObjectPath102,103
+powerBaseObjectPath powerBaseObjectPath103,104
+readDict readDict107,108
+readDict readDict108,109
+readDictIntegral readDictIntegral113,114
+readDictIntegral readDictIntegral114,115
+getBatteryInfo getBatteryInfo132,133
+getBatteryInfo getBatteryInfo133,134
+batteryContextNew batteryContextNew173,174
+batteryContextNew batteryContextNew174,175
+
+./site-haskell/src/System/Desktop/Commands/Fizzixnerd.hs,463
+module System.Desktop.Commands.Fizzixnerd System.Desktop.Commands.Fizzixnerd3,4
+browser browser5,6
+explorer explorer6,7
+systemMonitor systemMonitor7,8
+music music8,9
+video video9,10
+myTerminal myTerminal10,11
+compton compton12,13
+dock dock13,14
+gnomeDo gnomeDo14,15
+enableHorizontalTwoFingerScrolling enableHorizontalTwoFingerScrolling15,16
+volumeUp volumeUp17,18
+volumeDown volumeDown18,19
+toggleMute toggleMute19,20
+time time21,22
+
+./site-haskell/src/XMonad/Config/Fizzixnerd/Commands.hs,384
+module XMonad.Config.Fizzixnerd.Commands XMonad.Config.Fizzixnerd.Commands3,4
+browser browser5,6
+explorer explorer6,7
+systemMonitor systemMonitor7,8
+music music8,9
+video video9,10
+myTerminal myTerminal10,11
+compton compton12,13
+dock dock13,14
+gnomeDo gnomeDo14,15
+volumeUp volumeUp16,17
+volumeDown volumeDown17,18
+toggleMute toggleMute18,19
+time time20,21
+
+./site-haskell/src/XMonad/Actions/Fizzixnerd.hs,1028
+module XMonad.Actions.Fizzixnerd XMonad.Actions.Fizzixnerd0,1
+waitHalfSecond waitHalfSecond6,7
+waitHalfSecond waitHalfSecond7,8
+runBrowser runBrowser10,11
+runBrowser runBrowser11,12
+runExplorer runExplorer14,15
+runExplorer runExplorer15,16
+runSystemMonitor runSystemMonitor18,19
+runSystemMonitor runSystemMonitor19,20
+runVideo runVideo22,23
+runVideo runVideo23,24
+runMusic runMusic26,27
+runMusic runMusic27,28
+runTerminal runTerminal30,31
+runTerminal runTerminal31,32
+runEnableHorizontalTwoFingerScrolling runEnableHorizontalTwoFingerScrolling34,35
+runEnableHorizontalTwoFingerScrolling runEnableHorizontalTwoFingerScrolling35,36
+runCompton runCompton38,39
+runCompton runCompton39,40
+runGnomeDo runGnomeDo42,43
+runGnomeDo runGnomeDo43,44
+runDock runDock46,47
+runDock runDock47,48
+runVolumeUp runVolumeUp50,51
+runVolumeUp runVolumeUp51,52
+runVolumeDown runVolumeDown54,55
+runVolumeDown runVolumeDown55,56
+runToggleMute runToggleMute58,59
+runToggleMute runToggleMute59,60
+
+./site-haskell/src/XMonad/Hooks/Fizzixnerd.hs,604
+module XMonad.Hooks.Fizzixnerd XMonad.Hooks.Fizzixnerd0,1
+data TidState TidState30,31
+data TidState = TID TID30,31
+instance instance32,33
+clockStartupHook clockStartupHook35,36
+clockEventHook clockEventHook37,38
+myStartupHook myStartupHook47,48
+ignoreGnomeDo ignoreGnomeDo56,57
+ignoreCairoDock ignoreCairoDock57,58
+ignoreDocky ignoreDocky58,59
+floatNMConnectionEditor floatNMConnectionEditor59,60
+fullscreenFullscreen fullscreenFullscreen60,61
+myLogHook myLogHook64,65
+myLayoutHook myLayoutHook68,69
+myManageHook myManageHook77,78
+myhandleEventHook myhandleEventHook86,87
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/PrettyPrinter/DZen2.hs,100
+module XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2 XMonad.Hooks.DynamicLog.PrettyPrinter.DZen22,3
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/PrettyPrinter/DynamicDoc.hs,795
+module XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc2,3
+type DynamicDoc DynamicDoc13,14
+type DynamicDoc m m13,14
+type Process Process14,15
+dynStr dynStr43,44
+dynStr dynStr44,45
+dynDoc dynDoc46,47
+dynDoc dynDoc47,48
+dynProc dynProc49,50
+dynProc dynProc50,51
+dynAct dynAct52,53
+dynAct dynAct53,54
+renderOneLine renderOneLine55,56
+renderOneLine renderOneLine56,57
+oneLineStyle oneLineStyle58,59
+oneLineStyle oneLineStyle59,60
+dynamicRenderOneLine dynamicRenderOneLine65,66
+dynamicRenderOneLine dynamicRenderOneLine66,67
+fromStrF fromStrF68,69
+fromStrF fromStrF69,70
+fromStrFOL fromStrFOL71,72
+fromStrFOL fromStrFOL72,73
+hPrintDynamicDoc hPrintDynamicDoc74,75
+hPrintDynamicDoc hPrintDynamicDoc75,76
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/PrettyPrinter/PrettyLog.hs,108
+module XMonad.Hooks.DynamicLog.PrettyPrinter.PrettyLog XMonad.Hooks.DynamicLog.PrettyPrinter.PrettyLog0,1
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/PrettyPrinter.hs,88
+module XMonad.Hooks.DynamicLog.PrettyPrinter XMonad.Hooks.DynamicLog.PrettyPrinter0,1
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/DZen2/Universal.hs,5449
+module XMonad.Hooks.DynamicLog.Status.DZen2.Universal XMonad.Hooks.DynamicLog.Status.DZen2.Universal2,3
+data Position Position14,15
+data Position = LEFT LEFT14,15
+data Position = LEFT | RIGHT RIGHT14,15
+data Position = LEFT | RIGHT | CENTERCENTER14,15
+              | VALUE VALUE15,16
+              | HEREHERE16,17
+              | RESET_YRESET_Y17,18
+              | LOCK_X LOCK_X18,19
+              | LOCK_X | UNLOCK_XUNLOCK_X18,19
+              | TOP TOP19,20
+              | TOP | BOTTOMBOTTOM19,20
+data MouseButton MouseButton21,22
+data MouseButton = LeftMB LeftMB21,22
+data MouseButton = LeftMB | MiddleMB MiddleMB21,22
+data MouseButton = LeftMB | MiddleMB | RightMBRightMB21,22
+data Command Command23,24
+data Command  = P P23,24
+data Command  = P | PAPA23,24
+              | FG FG24,25
+              | FG | BGBG24,25
+              | I I25,26
+              | I | R R25,26
+              | I | R | RO RO25,26
+              | I | R | RO | C C25,26
+              | I | R | RO | C | COCO25,26
+              | CACA26,27
+              | ToggleCollapse ToggleCollapse27,28
+              | ToggleCollapse | Collapse Collapse27,28
+              | ToggleCollapse | Collapse | UncollapseUncollapse27,28
+              | ToggleStick ToggleStick28,29
+              | ToggleStick | Stick Stick28,29
+              | ToggleStick | Stick | UnstickUnstick28,29
+              | ToggleHide ToggleHide29,30
+              | ToggleHide | Hide Hide29,30
+              | ToggleHide | Hide | UnhideUnhide29,30
+              | Raise Raise30,31
+              | Raise | LowerLower30,31
+              | ScrollHome ScrollHome31,32
+              | ScrollHome | ScrollEndScrollEnd31,32
+              | ExitExit32,33
+data Argument Argument34,35
+data Argument = PosArg PosArg34,35
+              | ColorArg ColorArg35,36
+              | FilePathArg FilePathArg36,37
+              | DimArg DimArg37,38
+              | MouseButtonArg MouseButtonArg38,39
+              | ShellCommandArg ShellCommandArg39,40
+type ShellCommand ShellCommand41,42
+type Color Color42,43
+instance instance44,45
+escape escape58,59
+escape escape59,60
+pText pText61,62
+pText pText62,63
+paText paText64,65
+paText paText65,66
+fgText fgText67,68
+fgText fgText68,69
+bgText bgText70,71
+bgText bgText71,72
+iText iText73,74
+iText iText74,75
+rText rText76,77
+rText rText77,78
+roText roText79,80
+roText roText80,81
+cText cText82,83
+cText cText83,84
+coText coText85,86
+coText coText86,87
+caText caText88,89
+caText caText89,90
+toggleCollapseText toggleCollapseText91,92
+toggleCollapseText toggleCollapseText92,93
+collapseText collapseText94,95
+collapseText collapseText95,96
+uncollapseText uncollapseText97,98
+uncollapseText uncollapseText98,99
+toggleStickText toggleStickText100,101
+toggleStickText toggleStickText101,102
+stickText stickText103,104
+stickText stickText104,105
+unstickText unstickText106,107
+unstickText unstickText107,108
+toggleHideText toggleHideText109,110
+toggleHideText toggleHideText110,111
+hideText hideText112,113
+hideText hideText113,114
+unhideText unhideText115,116
+unhideText unhideText116,117
+raiseText raiseText118,119
+raiseText raiseText119,120
+lowerText lowerText121,122
+lowerText lowerText122,123
+scrollHomeText scrollHomeText124,125
+scrollHomeText scrollHomeText125,126
+scrollEndText scrollEndText127,128
+scrollEndText scrollEndText128,129
+exitText exitText130,131
+exitText exitText131,132
+ppCommand ppCommand134,135
+ppCommand ppCommand135,136
+ppPosition ppPosition160,161
+ppPosition ppPosition161,162
+ppMouseButton ppMouseButton165,166
+ppMouseButton ppMouseButton166,167
+ppShellCommand ppShellCommand170,171
+ppShellCommand ppShellCommand171,172
+ppArgument ppArgument173,174
+ppArgument ppArgument174,175
+delimitedCommand delimitedCommand181,182
+delimitedCommand delimitedCommand182,183
+dzen2DelimitedCommand dzen2DelimitedCommand186,187
+dzen2DelimitedCommand dzen2DelimitedCommand187,188
+simpleCommand simpleCommand192,193
+simpleCommand simpleCommand193,194
+dzen2SimpleCommand dzen2SimpleCommand198,199
+dzen2SimpleCommand dzen2SimpleCommand199,200
+pSep pSep201,202
+pSep pSep202,203
+dimensionSep dimensionSep204,205
+dimensionSep dimensionSep205,206
+clickableSep clickableSep207,208
+clickableSep clickableSep208,209
+p p212,213
+p p213,214
+pa pa215,216
+pa pa216,217
+fg fg218,219
+fg fg219,220
+bg bg221,222
+bg bg222,223
+i i224,225
+i i225,226
+r r227,228
+r r228,229
+ro ro230,231
+ro ro231,232
+c c233,234
+c c234,235
+co co236,237
+co co237,238
+ca ca239,240
+ca ca240,241
+toggleCollapse toggleCollapse243,244
+toggleCollapse toggleCollapse244,245
+collapse collapse246,247
+collapse collapse247,248
+uncollapse uncollapse249,250
+uncollapse uncollapse250,251
+toggleStick toggleStick252,253
+toggleStick toggleStick253,254
+stick stick255,256
+stick stick256,257
+unstick unstick258,259
+unstick unstick259,260
+toggleHide toggleHide261,262
+toggleHide toggleHide262,263
+hide hide264,265
+hide hide265,266
+unhide unhide267,268
+unhide unhide268,269
+raise raise270,271
+raise raise271,272
+lower lower273,274
+lower lower274,275
+scrollHome scrollHome276,277
+scrollHome scrollHome277,278
+scrollEnd scrollEnd279,280
+scrollEnd scrollEnd280,281
+exit exit282,283
+exit exit283,284
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/DZen2/Fancy.hs,238
+module XMonad.Hooks.DynamicLog.Status.DZen2.Fancy XMonad.Hooks.DynamicLog.Status.DZen2.Fancy2,3
+colorBattery colorBattery11,12
+colorBattery colorBattery12,13
+coloredBattery coloredBattery18,19
+coloredBattery coloredBattery19,20
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,537
+module XMonad.Hooks.DynamicLog.Status.StatusText XMonad.Hooks.DynamicLog.Status.StatusText2,3
+type Status Status10,11
+type Status b b10,11
+type StatusText StatusText11,12
+length length15,16
+length length16,17
+render render19,20
+render render20,21
+content content26,27
+content content27,28
+tags tags30,31
+tags tags31,32
+makeStatusText makeStatusText37,38
+makeStatusText makeStatusText38,39
+simpleStatusText simpleStatusText40,41
+simpleStatusText simpleStatusText41,42
+dynST dynST43,44
+dynST dynST44,45
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/StatusText/Dynamic.hs,232
+module XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic2,3
+type Process Process16,17
+dynText dynText20,21
+dynText dynText21,22
+dynProc dynProc23,24
+dynProc dynProc24,25
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/System.hs,254
+module XMonad.Hooks.DynamicLog.Status.System XMonad.Hooks.DynamicLog.Status.System2,3
+date date14,15
+date date15,16
+battery battery20,21
+battery battery21,22
+batteryPercentage batteryPercentage28,29
+batteryPercentage batteryPercentage29,30
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/X.hs,1684
+module XMonad.Hooks.DynamicLog.Status.X XMonad.Hooks.DynamicLog.Status.X2,3
+data WorkspacePP WorkspacePP22,23
+data WorkspacePP m = WSPP WSPP22,23
+data WorkspacePP m = WSPP { wsppCurrent wsppCurrent22,23
+                          , wsppVisible wsppVisible23,24
+                          , wsppHidden wsppHidden24,25
+                          , wsppHiddenNoWindows wsppHiddenNoWindows25,26
+                          , wsppUrgent wsppUrgent26,27
+                          , wsppSep wsppSep27,28
+                          , wsppSort wsppSort28,29
+data WindowPP WindowPP31,32
+data WindowPP m = WPP WPP31,32
+data WindowPP m = WPP { wppTitle wppTitle31,32
+data LayoutPP LayoutPP33,34
+data LayoutPP m = LPP LPP33,34
+data LayoutPP m = LPP { lppTitle lppTitle33,34
+defaultWindowPP defaultWindowPP37,38
+defaultWindowPP defaultWindowPP38,39
+defaultWorkspacePP defaultWorkspacePP40,41
+defaultWorkspacePP defaultWorkspacePP41,42
+defaultLayoutPP defaultLayoutPP50,51
+defaultLayoutPP defaultLayoutPP51,52
+simpleLayoutPP simpleLayoutPP53,54
+simpleLayoutPP simpleLayoutPP54,55
+sepBy sepBy57,58
+sepBy sepBy61,62
+workspaces workspaces66,67
+workspaces workspaces67,68
+defaultWorkspaces defaultWorkspaces81,82
+defaultWorkspaces defaultWorkspaces82,83
+windowTitle windowTitle84,85
+windowTitle windowTitle85,86
+defaultWindowTitle defaultWindowTitle90,91
+defaultWindowTitle defaultWindowTitle91,92
+layoutTitle layoutTitle93,94
+layoutTitle layoutTitle94,95
+defaultLayoutTitle defaultLayoutTitle98,99
+defaultLayoutTitle defaultLayoutTitle99,100
+simpleLayoutTitle simpleLayoutTitle101,102
+simpleLayoutTitle simpleLayoutTitle102,103
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/Bars.hs,1311
+module XMonad.Hooks.DynamicLog.Status.Bars XMonad.Hooks.DynamicLog.Status.Bars3,4
+newtype StatusBarSection StatusBarSection23,24
+newtype StatusBarSection = StatusBarSection StatusBarSection23,24
+newtype StatusBar StatusBar26,27
+newtype StatusBar = StatusBar StatusBar26,27
+makeStatusBarSection makeStatusBarSection28,29
+makeStatusBarSection makeStatusBarSection29,30
+makeStatusBar makeStatusBar31,32
+makeStatusBar makeStatusBar32,33
+length length36,37
+length length37,38
+numberOfSections numberOfSections41,42
+numberOfSections numberOfSections42,43
+numberOfNonemptySections numberOfNonemptySections45,46
+numberOfNonemptySections numberOfNonemptySections46,47
+left left48,49
+left left49,50
+center center51,52
+center center52,53
+right right54,55
+right right55,56
+simpleRenderStatusBarSection simpleRenderStatusBarSection57,58
+simpleRenderStatusBarSection simpleRenderStatusBarSection58,59
+simpleRenderBar simpleRenderBar60,61
+simpleRenderBar simpleRenderBar61,62
+defaultRenderBar defaultRenderBar71,72
+defaultRenderBar defaultRenderBar72,73
+hPrintStatusBar hPrintStatusBar75,76
+hPrintStatusBar hPrintStatusBar76,77
+statusBar statusBar78,79
+statusBar statusBar86,87
+defaultStatusBar defaultStatusBar101,102
+defaultStatusBar defaultStatusBar107,108
+
+./site-haskell/src/XMonad/Util/IO.hs,42
+module XMonad.Util.IO XMonad.Util.IO0,1
+
+./site-haskell/Setup.hs,15
+main main1,2
+
+./site-haskell/dist/build/autogen/Paths_site_haskell.hs,974
+module Paths_site_haskell Paths_site_haskell0,1
+catchIO catchIO11,12
+catchIO catchIO12,13
+version version14,15
+version version15,16
+bindir, libdir, datadir, libexecdir, sysconfdir sysconfdir16,17
+bindir, libdir, datadir, libexecdir,libexecdir16,17
+bindir, libdir, datadir,datadir16,17
+bindir, libdir,libdir16,17
+bindir,bindir16,17
+bindir bindir18,19
+libdir libdir19,20
+datadir datadir20,21
+libexecdir libexecdir21,22
+sysconfdir sysconfdir22,23
+getBinDir, getLibDir, getDataDir, getLibexecDir, getSysconfDir getSysconfDir24,25
+getBinDir, getLibDir, getDataDir, getLibexecDir,getLibexecDir24,25
+getBinDir, getLibDir, getDataDir,getDataDir24,25
+getBinDir, getLibDir,getLibDir24,25
+getBinDir,getBinDir24,25
+getBinDir getBinDir25,26
+getLibDir getLibDir26,27
+getDataDir getDataDir27,28
+getLibexecDir getLibexecDir28,29
+getSysconfDir getSysconfDir29,30
+getDataFileName getDataFileName31,32
+getDataFileName getDataFileName32,33
+
+./site-haskell/dist/setup/setup.hs,19
+import import0,1

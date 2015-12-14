@@ -2,9 +2,11 @@
 
 module XMonad.Hooks.DynamicLog.Status.DZen2.Universal where
 
+import XMonad.Hooks.DynamicLog.Status.System
 import XMonad.Hooks.DynamicLog.Status.StatusText
 
 import qualified Data.Text as T
+import Control.Monad.IO.Class
 
 import Data.List
 import Data.String
@@ -37,8 +39,8 @@ data Argument = PosArg Position
               | MouseButtonArg MouseButton 
               | ShellCommandArg ShellCommand
 
-type ShellCommand = String
-type Color = String
+type ShellCommand = T.Text
+type Color = T.Text
 
 instance Show Position where
   show LEFT = "_LEFT"
@@ -167,11 +169,11 @@ ppMouseButton RightMB = "2"
 ppMouseButton MiddleMB = "3"
 
 ppShellCommand :: ShellCommand -> T.Text
-ppShellCommand sc = fromString sc
+ppShellCommand sc = sc
 
 ppArgument :: Argument -> T.Text
 ppArgument (PosArg p) = ppPosition p
-ppArgument (ColorArg c) = fromString c
+ppArgument (ColorArg c) = c
 ppArgument (FilePathArg fp) = fromString fp
 ppArgument (DimArg i) = fromString $ show i
 ppArgument (MouseButtonArg mb) = ppMouseButton mb
@@ -280,3 +282,4 @@ scrollEnd = dzen2SimpleCommand ScrollEnd mempty []
 
 exit :: StatusText
 exit = dzen2SimpleCommand Exit mempty []
+

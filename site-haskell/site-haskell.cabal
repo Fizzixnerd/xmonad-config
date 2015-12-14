@@ -52,18 +52,20 @@ library
                      , System.Desktop.Commands.Fizzixnerd
                      , XMonad.Actions.Fizzixnerd
                      , XMonad.Hooks.Fizzixnerd
-                     , XMonad.Hooks.DynamicLog.PrettyPrinter
-                     , XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2
-                     , XMonad.Hooks.DynamicLog.PrettyPrinter.DynamicDoc
-                     , XMonad.Util.IO
+                     , XMonad.Hooks.DynamicLog.Status.X
+                     , XMonad.Hooks.DynamicLog.Status.System
                      , XMonad.Hooks.DynamicLog.Status.StatusText
+                     , XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic
                      , XMonad.Hooks.DynamicLog.Status.DZen2.Universal
+                     , XMonad.Hooks.DynamicLog.Status.DZen2.Fancy
+                     , XMonad.Hooks.DynamicLog.Status.Bars
   
   -- Modules included in this library but not exported.
   -- other-modules:       
   
   -- LANGUAGE extensions used by modules in this package.
   other-extensions:    OverloadedStrings
+                     , FlexibleContexts
   
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.8 && <4.9
