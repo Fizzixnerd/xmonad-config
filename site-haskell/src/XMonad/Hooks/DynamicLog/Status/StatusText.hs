@@ -2,44 +2,42 @@
 
 module XMonad.Hooks.DynamicLog.Status.StatusText where
 
-import qualified Data.Text as T
-
 import Data.Monoid
 
 import Control.Monad.Writer
 
 type Status b a = Writer (b, Dual b) a
-type StatusText = Status [T.Text] T.Text
+type StatusText = Status [String] String
 
--- | Return the length of the /displayed/ Text (without the control
+-- | Return the length of the /displayed/ String (without the control
 -- prefix/sufixes).
 length :: StatusText -> Int
-length st = T.length $ content st
+length st = Prelude.length $ content st
 
 -- | Render the StatusText to a Text suitable for outputting.
-render :: StatusText -> T.Text
+render :: StatusText -> String
 render st = mconcat [mconcat p, c, mconcat s]
   where
     c = content st
     (p, s) = tags st
 
 -- | Return the human-readable content of the StatusText.
-content :: StatusText -> T.Text
+content :: StatusText -> String
 content st = fst $ runWriter st
 
 -- | Return the tag wrappers of the StatusText.
-tags :: StatusText -> ([T.Text], [T.Text])
+tags :: StatusText -> ([String], [String])
 tags st = (p, s)
   where 
     (p, Dual s) = snd $ runWriter st
 
 -- | Return a StatusText with the given prefixes, suffixes, and
 -- content respectively.
-makeStatusText :: [T.Text] -> [T.Text] -> T.Text -> StatusText
+makeStatusText :: [String] -> [String] -> String -> StatusText
 makeStatusText p s c = writer (c, (p, Dual s))
 
-simpleStatusText :: T.Text -> StatusText
+simpleStatusText :: String -> StatusText
 simpleStatusText = return
 
-dynST :: Monad m => T.Text -> m StatusText
+dynST :: Monad m => String -> m StatusText
 dynST = return . simpleStatusText

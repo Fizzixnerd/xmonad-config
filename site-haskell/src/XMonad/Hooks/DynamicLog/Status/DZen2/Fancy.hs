@@ -6,10 +6,9 @@ import XMonad.Hooks.DynamicLog.Status.System
 import XMonad.Hooks.DynamicLog.Status.StatusText
 import XMonad.Hooks.DynamicLog.Status.DZen2.Universal
 
-import qualified Data.Text as T
 import Control.Monad.IO.Class
 
-colorBattery :: Int -> (T.Text -> StatusText)
+colorBattery :: Int -> (String -> StatusText)
 colorBattery x
   | (x < 15)  = fg "red"
   | (x < 50)  = fg "yellow"
@@ -21,4 +20,4 @@ coloredBattery = do
   batST <- battery
   return $ do 
     batText <- batST
-    (colorBattery $ read $ T.unpack batText) batText
+    (colorBattery $ read batText) batText

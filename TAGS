@@ -1,16 +1,16 @@
 
 ./xmonad.hs,286
 module Main Main3,4
-myWorkspaces myWorkspaces31,32
-myGenericKeys myGenericKeys35,36
-myMultimediaKeys myMultimediaKeys43,44
-myKeys myKeys48,49
-myConfig myConfig52,53
-dzen2Time dzen2Time64,65
-dzen2Time dzen2Time65,66
-dzen2 dzen267,68
-dzen2 dzen270,71
-main main79,80
+myWorkspaces myWorkspaces29,30
+myGenericKeys myGenericKeys33,34
+myMultimediaKeys myMultimediaKeys41,42
+myKeys myKeys46,47
+myConfig myConfig50,51
+dzen2Time dzen2Time62,63
+dzen2Time dzen2Time63,64
+dzen2 dzen265,66
+dzen2 dzen268,69
+main main77,78
 
 ./dzen.hs,169
 dzenFont dzenFont0,1
@@ -278,301 +278,304 @@ module XMonad.Hooks.DynamicLog.PrettyPrinter.PrettyLog XMonad.Hooks.DynamicLog.
 ./site-haskell/src/XMonad/Hooks/DynamicLog/PrettyPrinter.hs,88
 module XMonad.Hooks.DynamicLog.PrettyPrinter XMonad.Hooks.DynamicLog.PrettyPrinter0,1
 
-./site-haskell/src/XMonad/Hooks/DynamicLog/Status/DZen2/Universal.hs,5449
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/DZen2/Universal.hs,5448
 module XMonad.Hooks.DynamicLog.Status.DZen2.Universal XMonad.Hooks.DynamicLog.Status.DZen2.Universal2,3
-data Position Position14,15
-data Position = LEFT LEFT14,15
-data Position = LEFT | RIGHT RIGHT14,15
-data Position = LEFT | RIGHT | CENTERCENTER14,15
-              | VALUE VALUE15,16
-              | HEREHERE16,17
-              | RESET_YRESET_Y17,18
-              | LOCK_X LOCK_X18,19
-              | LOCK_X | UNLOCK_XUNLOCK_X18,19
-              | TOP TOP19,20
-              | TOP | BOTTOMBOTTOM19,20
-data MouseButton MouseButton21,22
-data MouseButton = LeftMB LeftMB21,22
-data MouseButton = LeftMB | MiddleMB MiddleMB21,22
-data MouseButton = LeftMB | MiddleMB | RightMBRightMB21,22
-data Command Command23,24
-data Command  = P P23,24
-data Command  = P | PAPA23,24
-              | FG FG24,25
-              | FG | BGBG24,25
-              | I I25,26
-              | I | R R25,26
-              | I | R | RO RO25,26
-              | I | R | RO | C C25,26
-              | I | R | RO | C | COCO25,26
-              | CACA26,27
-              | ToggleCollapse ToggleCollapse27,28
-              | ToggleCollapse | Collapse Collapse27,28
-              | ToggleCollapse | Collapse | UncollapseUncollapse27,28
-              | ToggleStick ToggleStick28,29
-              | ToggleStick | Stick Stick28,29
-              | ToggleStick | Stick | UnstickUnstick28,29
-              | ToggleHide ToggleHide29,30
-              | ToggleHide | Hide Hide29,30
-              | ToggleHide | Hide | UnhideUnhide29,30
-              | Raise Raise30,31
-              | Raise | LowerLower30,31
-              | ScrollHome ScrollHome31,32
-              | ScrollHome | ScrollEndScrollEnd31,32
-              | ExitExit32,33
-data Argument Argument34,35
-data Argument = PosArg PosArg34,35
-              | ColorArg ColorArg35,36
-              | FilePathArg FilePathArg36,37
-              | DimArg DimArg37,38
-              | MouseButtonArg MouseButtonArg38,39
-              | ShellCommandArg ShellCommandArg39,40
-type ShellCommand ShellCommand41,42
-type Color Color42,43
-instance instance44,45
+data Position Position13,14
+data Position = LEFT LEFT13,14
+data Position = LEFT | RIGHT RIGHT13,14
+data Position = LEFT | RIGHT | CENTERCENTER13,14
+              | VALUE VALUE14,15
+              | HEREHERE15,16
+              | RESET_YRESET_Y16,17
+              | LOCK_X LOCK_X17,18
+              | LOCK_X | UNLOCK_XUNLOCK_X17,18
+              | TOP TOP18,19
+              | TOP | BOTTOMBOTTOM18,19
+data MouseButton MouseButton20,21
+data MouseButton = LeftMB LeftMB20,21
+data MouseButton = LeftMB | MiddleMB MiddleMB20,21
+data MouseButton = LeftMB | MiddleMB | RightMBRightMB20,21
+data Command Command22,23
+data Command  = P P22,23
+data Command  = P | PAPA22,23
+              | FG FG23,24
+              | FG | BGBG23,24
+              | I I24,25
+              | I | R R24,25
+              | I | R | RO RO24,25
+              | I | R | RO | C C24,25
+              | I | R | RO | C | COCO24,25
+              | CACA25,26
+              | ToggleCollapse ToggleCollapse26,27
+              | ToggleCollapse | Collapse Collapse26,27
+              | ToggleCollapse | Collapse | UncollapseUncollapse26,27
+              | ToggleStick ToggleStick27,28
+              | ToggleStick | Stick Stick27,28
+              | ToggleStick | Stick | UnstickUnstick27,28
+              | ToggleHide ToggleHide28,29
+              | ToggleHide | Hide Hide28,29
+              | ToggleHide | Hide | UnhideUnhide28,29
+              | Raise Raise29,30
+              | Raise | LowerLower29,30
+              | ScrollHome ScrollHome30,31
+              | ScrollHome | ScrollEndScrollEnd30,31
+              | ExitExit31,32
+data Argument Argument33,34
+data Argument = PosArg PosArg33,34
+              | ColorArg ColorArg34,35
+              | FilePathArg FilePathArg35,36
+              | DimArg DimArg36,37
+              | MouseButtonArg MouseButtonArg37,38
+              | ShellCommandArg ShellCommandArg38,39
+type ShellCommand ShellCommand40,41
+type Color Color41,42
+instance instance43,44
+escape escape57,58
 escape escape58,59
-escape escape59,60
+pText pText60,61
 pText pText61,62
-pText pText62,63
+paText paText63,64
 paText paText64,65
-paText paText65,66
+fgText fgText66,67
 fgText fgText67,68
-fgText fgText68,69
+bgText bgText69,70
 bgText bgText70,71
-bgText bgText71,72
+iText iText72,73
 iText iText73,74
-iText iText74,75
+rText rText75,76
 rText rText76,77
-rText rText77,78
+roText roText78,79
 roText roText79,80
-roText roText80,81
+cText cText81,82
 cText cText82,83
-cText cText83,84
+coText coText84,85
 coText coText85,86
-coText coText86,87
+caText caText87,88
 caText caText88,89
-caText caText89,90
+toggleCollapseText toggleCollapseText90,91
 toggleCollapseText toggleCollapseText91,92
-toggleCollapseText toggleCollapseText92,93
+collapseText collapseText93,94
 collapseText collapseText94,95
-collapseText collapseText95,96
+uncollapseText uncollapseText96,97
 uncollapseText uncollapseText97,98
-uncollapseText uncollapseText98,99
+toggleStickText toggleStickText99,100
 toggleStickText toggleStickText100,101
-toggleStickText toggleStickText101,102
+stickText stickText102,103
 stickText stickText103,104
-stickText stickText104,105
+unstickText unstickText105,106
 unstickText unstickText106,107
-unstickText unstickText107,108
+toggleHideText toggleHideText108,109
 toggleHideText toggleHideText109,110
-toggleHideText toggleHideText110,111
+hideText hideText111,112
 hideText hideText112,113
-hideText hideText113,114
+unhideText unhideText114,115
 unhideText unhideText115,116
-unhideText unhideText116,117
+raiseText raiseText117,118
 raiseText raiseText118,119
-raiseText raiseText119,120
+lowerText lowerText120,121
 lowerText lowerText121,122
-lowerText lowerText122,123
+scrollHomeText scrollHomeText123,124
 scrollHomeText scrollHomeText124,125
-scrollHomeText scrollHomeText125,126
+scrollEndText scrollEndText126,127
 scrollEndText scrollEndText127,128
-scrollEndText scrollEndText128,129
+exitText exitText129,130
 exitText exitText130,131
-exitText exitText131,132
+ppCommand ppCommand133,134
 ppCommand ppCommand134,135
-ppCommand ppCommand135,136
+ppPosition ppPosition159,160
 ppPosition ppPosition160,161
-ppPosition ppPosition161,162
+ppMouseButton ppMouseButton164,165
 ppMouseButton ppMouseButton165,166
-ppMouseButton ppMouseButton166,167
+ppShellCommand ppShellCommand169,170
 ppShellCommand ppShellCommand170,171
-ppShellCommand ppShellCommand171,172
+ppArgument ppArgument172,173
 ppArgument ppArgument173,174
-ppArgument ppArgument174,175
+delimitedCommand delimitedCommand180,181
 delimitedCommand delimitedCommand181,182
-delimitedCommand delimitedCommand182,183
+dzen2DelimitedCommand dzen2DelimitedCommand185,186
 dzen2DelimitedCommand dzen2DelimitedCommand186,187
-dzen2DelimitedCommand dzen2DelimitedCommand187,188
+simpleCommand simpleCommand191,192
 simpleCommand simpleCommand192,193
-simpleCommand simpleCommand193,194
+dzen2SimpleCommand dzen2SimpleCommand197,198
 dzen2SimpleCommand dzen2SimpleCommand198,199
-dzen2SimpleCommand dzen2SimpleCommand199,200
+pSep pSep200,201
 pSep pSep201,202
-pSep pSep202,203
+dimensionSep dimensionSep203,204
 dimensionSep dimensionSep204,205
-dimensionSep dimensionSep205,206
+clickableSep clickableSep206,207
 clickableSep clickableSep207,208
-clickableSep clickableSep208,209
+p p211,212
 p p212,213
-p p213,214
+pa pa214,215
 pa pa215,216
-pa pa216,217
+fg fg217,218
 fg fg218,219
-fg fg219,220
+bg bg220,221
 bg bg221,222
-bg bg222,223
+i i223,224
 i i224,225
-i i225,226
+r r226,227
 r r227,228
-r r228,229
+ro ro229,230
 ro ro230,231
-ro ro231,232
+c c232,233
 c c233,234
-c c234,235
+co co235,236
 co co236,237
-co co237,238
+ca ca238,239
 ca ca239,240
-ca ca240,241
+toggleCollapse toggleCollapse242,243
 toggleCollapse toggleCollapse243,244
-toggleCollapse toggleCollapse244,245
+collapse collapse245,246
 collapse collapse246,247
-collapse collapse247,248
+uncollapse uncollapse248,249
 uncollapse uncollapse249,250
-uncollapse uncollapse250,251
+toggleStick toggleStick251,252
 toggleStick toggleStick252,253
-toggleStick toggleStick253,254
+stick stick254,255
 stick stick255,256
-stick stick256,257
+unstick unstick257,258
 unstick unstick258,259
-unstick unstick259,260
+toggleHide toggleHide260,261
 toggleHide toggleHide261,262
-toggleHide toggleHide262,263
+hide hide263,264
 hide hide264,265
-hide hide265,266
+unhide unhide266,267
 unhide unhide267,268
-unhide unhide268,269
+raise raise269,270
 raise raise270,271
-raise raise271,272
+lower lower272,273
 lower lower273,274
-lower lower274,275
+scrollHome scrollHome275,276
 scrollHome scrollHome276,277
-scrollHome scrollHome277,278
+scrollEnd scrollEnd278,279
 scrollEnd scrollEnd279,280
-scrollEnd scrollEnd280,281
+exit exit281,282
 exit exit282,283
-exit exit283,284
 
 ./site-haskell/src/XMonad/Hooks/DynamicLog/Status/DZen2/Fancy.hs,238
 module XMonad.Hooks.DynamicLog.Status.DZen2.Fancy XMonad.Hooks.DynamicLog.Status.DZen2.Fancy2,3
+colorBattery colorBattery10,11
 colorBattery colorBattery11,12
-colorBattery colorBattery12,13
+coloredBattery coloredBattery17,18
 coloredBattery coloredBattery18,19
-coloredBattery coloredBattery19,20
 
-./site-haskell/src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,537
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,532
 module XMonad.Hooks.DynamicLog.Status.StatusText XMonad.Hooks.DynamicLog.Status.StatusText2,3
-type Status Status10,11
-type Status b b10,11
-type StatusText StatusText11,12
-length length15,16
-length length16,17
-render render19,20
-render render20,21
-content content26,27
-content content27,28
-tags tags30,31
-tags tags31,32
-makeStatusText makeStatusText37,38
-makeStatusText makeStatusText38,39
-simpleStatusText simpleStatusText40,41
-simpleStatusText simpleStatusText41,42
-dynST dynST43,44
-dynST dynST44,45
+type Status Status8,9
+type Status b b8,9
+type StatusText StatusText9,10
+length length13,14
+length length14,15
+render render17,18
+render render18,19
+content content24,25
+content content25,26
+tags tags28,29
+tags tags29,30
+makeStatusText makeStatusText35,36
+makeStatusText makeStatusText36,37
+simpleStatusText simpleStatusText38,39
+simpleStatusText simpleStatusText39,40
+dynST dynST41,42
+dynST dynST42,43
 
 ./site-haskell/src/XMonad/Hooks/DynamicLog/Status/StatusText/Dynamic.hs,232
 module XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic2,3
-type Process Process16,17
-dynText dynText20,21
-dynText dynText21,22
-dynProc dynProc23,24
-dynProc dynProc24,25
+type Process Process14,15
+dynText dynText18,19
+dynText dynText19,20
+dynProc dynProc21,22
+dynProc dynProc22,23
 
 ./site-haskell/src/XMonad/Hooks/DynamicLog/Status/System.hs,254
 module XMonad.Hooks.DynamicLog.Status.System XMonad.Hooks.DynamicLog.Status.System2,3
-date date14,15
-date date15,16
-battery battery20,21
-battery battery21,22
-batteryPercentage batteryPercentage28,29
-batteryPercentage batteryPercentage29,30
+date date12,13
+date date13,14
+battery battery18,19
+battery battery19,20
+batteryPercentage batteryPercentage26,27
+batteryPercentage batteryPercentage27,28
 
-./site-haskell/src/XMonad/Hooks/DynamicLog/Status/X.hs,1684
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/X.hs,1682
 module XMonad.Hooks.DynamicLog.Status.X XMonad.Hooks.DynamicLog.Status.X2,3
-data WorkspacePP WorkspacePP22,23
-data WorkspacePP m = WSPP WSPP22,23
-data WorkspacePP m = WSPP { wsppCurrent wsppCurrent22,23
-                          , wsppVisible wsppVisible23,24
-                          , wsppHidden wsppHidden24,25
-                          , wsppHiddenNoWindows wsppHiddenNoWindows25,26
-                          , wsppUrgent wsppUrgent26,27
-                          , wsppSep wsppSep27,28
-                          , wsppSort wsppSort28,29
-data WindowPP WindowPP31,32
-data WindowPP m = WPP WPP31,32
-data WindowPP m = WPP { wppTitle wppTitle31,32
-data LayoutPP LayoutPP33,34
-data LayoutPP m = LPP LPP33,34
-data LayoutPP m = LPP { lppTitle lppTitle33,34
-defaultWindowPP defaultWindowPP37,38
-defaultWindowPP defaultWindowPP38,39
-defaultWorkspacePP defaultWorkspacePP40,41
-defaultWorkspacePP defaultWorkspacePP41,42
-defaultLayoutPP defaultLayoutPP50,51
-defaultLayoutPP defaultLayoutPP51,52
-simpleLayoutPP simpleLayoutPP53,54
-simpleLayoutPP simpleLayoutPP54,55
-sepBy sepBy57,58
-sepBy sepBy61,62
-workspaces workspaces66,67
-workspaces workspaces67,68
-defaultWorkspaces defaultWorkspaces81,82
-defaultWorkspaces defaultWorkspaces82,83
-windowTitle windowTitle84,85
-windowTitle windowTitle85,86
-defaultWindowTitle defaultWindowTitle90,91
-defaultWindowTitle defaultWindowTitle91,92
-layoutTitle layoutTitle93,94
-layoutTitle layoutTitle94,95
-defaultLayoutTitle defaultLayoutTitle98,99
-defaultLayoutTitle defaultLayoutTitle99,100
-simpleLayoutTitle simpleLayoutTitle101,102
-simpleLayoutTitle simpleLayoutTitle102,103
+data WorkspacePP WorkspacePP20,21
+data WorkspacePP m = WSPP WSPP20,21
+data WorkspacePP m = WSPP { wsppCurrent wsppCurrent20,21
+                          , wsppVisible wsppVisible21,22
+                          , wsppHidden wsppHidden22,23
+                          , wsppHiddenNoWindows wsppHiddenNoWindows23,24
+                          , wsppUrgent wsppUrgent24,25
+                          , wsppSep wsppSep25,26
+                          , wsppSort wsppSort26,27
+data WindowPP WindowPP29,30
+data WindowPP m = WPP WPP29,30
+data WindowPP m = WPP { wppTitle wppTitle29,30
+data LayoutPP LayoutPP31,32
+data LayoutPP m = LPP LPP31,32
+data LayoutPP m = LPP { lppTitle lppTitle31,32
+defaultWindowPP defaultWindowPP35,36
+defaultWindowPP defaultWindowPP36,37
+defaultWorkspacePP defaultWorkspacePP38,39
+defaultWorkspacePP defaultWorkspacePP39,40
+defaultLayoutPP defaultLayoutPP48,49
+defaultLayoutPP defaultLayoutPP49,50
+simpleLayoutPP simpleLayoutPP51,52
+simpleLayoutPP simpleLayoutPP52,53
+sepBy sepBy55,56
+sepBy sepBy59,60
+workspaces workspaces64,65
+workspaces workspaces65,66
+defaultWorkspaces defaultWorkspaces79,80
+defaultWorkspaces defaultWorkspaces80,81
+windowTitle windowTitle82,83
+windowTitle windowTitle83,84
+defaultWindowTitle defaultWindowTitle88,89
+defaultWindowTitle defaultWindowTitle89,90
+layoutTitle layoutTitle91,92
+layoutTitle layoutTitle92,93
+defaultLayoutTitle defaultLayoutTitle96,97
+defaultLayoutTitle defaultLayoutTitle97,98
+simpleLayoutTitle simpleLayoutTitle99,100
+simpleLayoutTitle simpleLayoutTitle100,101
 
-./site-haskell/src/XMonad/Hooks/DynamicLog/Status/Bars.hs,1311
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/Bars.hs,1310
 module XMonad.Hooks.DynamicLog.Status.Bars XMonad.Hooks.DynamicLog.Status.Bars3,4
-newtype StatusBarSection StatusBarSection23,24
-newtype StatusBarSection = StatusBarSection StatusBarSection23,24
-newtype StatusBar StatusBar26,27
-newtype StatusBar = StatusBar StatusBar26,27
-makeStatusBarSection makeStatusBarSection28,29
-makeStatusBarSection makeStatusBarSection29,30
-makeStatusBar makeStatusBar31,32
-makeStatusBar makeStatusBar32,33
-length length36,37
-length length37,38
-numberOfSections numberOfSections41,42
-numberOfSections numberOfSections42,43
-numberOfNonemptySections numberOfNonemptySections45,46
-numberOfNonemptySections numberOfNonemptySections46,47
-left left48,49
-left left49,50
-center center51,52
-center center52,53
-right right54,55
-right right55,56
-simpleRenderStatusBarSection simpleRenderStatusBarSection57,58
-simpleRenderStatusBarSection simpleRenderStatusBarSection58,59
-simpleRenderBar simpleRenderBar60,61
-simpleRenderBar simpleRenderBar61,62
-defaultRenderBar defaultRenderBar71,72
-defaultRenderBar defaultRenderBar72,73
-hPrintStatusBar hPrintStatusBar75,76
-hPrintStatusBar hPrintStatusBar76,77
-statusBar statusBar78,79
-statusBar statusBar86,87
-defaultStatusBar defaultStatusBar101,102
-defaultStatusBar defaultStatusBar107,108
+newtype StatusBarSection StatusBarSection20,21
+newtype StatusBarSection = StatusBarSection StatusBarSection20,21
+newtype StatusBar StatusBar23,24
+newtype StatusBar = StatusBar StatusBar23,24
+makeStatusBarSection makeStatusBarSection25,26
+makeStatusBarSection makeStatusBarSection26,27
+makeStatusBar makeStatusBar28,29
+makeStatusBar makeStatusBar29,30
+length length33,34
+length length34,35
+numberOfSections numberOfSections38,39
+numberOfSections numberOfSections39,40
+numberOfNonemptySections numberOfNonemptySections42,43
+numberOfNonemptySections numberOfNonemptySections43,44
+left left45,46
+left left46,47
+center center48,49
+center center49,50
+right right51,52
+right right52,53
+simpleRenderStatusBarSection simpleRenderStatusBarSection54,55
+simpleRenderStatusBarSection simpleRenderStatusBarSection55,56
+simpleRenderBar simpleRenderBar58,59
+simpleRenderBar simpleRenderBar59,60
+defaultRenderBar defaultRenderBar69,70
+defaultRenderBar defaultRenderBar70,71
+hPrintStatusBar hPrintStatusBar73,74
+hPrintStatusBar hPrintStatusBar74,75
+statusBar statusBar76,77
+statusBar statusBar84,85
+defaultStatusBar defaultStatusBar99,100
+defaultStatusBar defaultStatusBar105,106
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/Xft.hs,82
+module XMonad.Hooks.DynamicLog.Status.Xft XMonad.Hooks.DynamicLog.Status.Xft3,4
 
 ./site-haskell/src/XMonad/Util/IO.hs,42
 module XMonad.Util.IO XMonad.Util.IO0,1

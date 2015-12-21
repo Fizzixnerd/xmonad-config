@@ -24,8 +24,6 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Loggers hiding (battery, date)
 import XMonad.Util.Timer
 
-import Text.PrettyPrint
-
 -- WORKSPACES
 
 

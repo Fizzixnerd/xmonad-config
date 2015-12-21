@@ -18,16 +18,13 @@ import qualified Data.List as L
 import qualified System.IO as IO
 import Data.Monoid
 
-import qualified Data.Text as T
-import qualified Data.Text.IO as TIO
-
 newtype StatusBarSection = StatusBarSection [ST.StatusText]
 
--- | Left, middle, and right sections of the StatusBar respectively, and a separator
+-- | Left, middle, and right sections of the StatusBar respectively.
 newtype StatusBar = StatusBar (StatusBarSection, StatusBarSection, StatusBarSection)
 
 makeStatusBarSection :: [ST.StatusText] -> StatusBarSection
-makeStatusBarSection sts = StatusBarSection sts
+makeStatusBarSection sbs = StatusBarSection sbs
 
 makeStatusBar :: StatusBarSection -> StatusBarSection -> StatusBarSection -> StatusBar
 makeStatusBar l c r = StatusBar (l, c, r)
@@ -55,10 +52,11 @@ center (StatusBar (l,c,r)) = c
 right :: StatusBar -> StatusBarSection
 right (StatusBar (l,c,r)) = r
 
-simpleRenderStatusBarSection :: StatusBarSection -> T.Text -> T.Text
+simpleRenderStatusBarSection :: StatusBarSection -> String -> String
 simpleRenderStatusBarSection (StatusBarSection sbs) sep = mconcat $ fmap ST.render $ L.intersperse (ST.simpleStatusText sep) sbs
 
-simpleRenderBar :: StatusBar -> T.Text -> T.Text
+-- | TODO: Fix the placement of the text.
+simpleRenderBar :: StatusBar -> String -> String
 simpleRenderBar sb sep = 
   let l = left sb
       c = center sb
@@ -69,23 +67,23 @@ simpleRenderBar sb sep =
   in
     leftAlignedL <> centerAlignedC <> rightAlignedR
 
-defaultRenderBar :: StatusBar -> T.Text
+defaultRenderBar :: StatusBar -> String
 defaultRenderBar bar = simpleRenderBar bar sep
   where sep = " | "
 
-hPrintStatusBar :: IO.Handle -> StatusBar -> (StatusBar -> T.Text) -> X ()
-hPrintStatusBar h bar renderF = liftIO $ TIO.hPutStrLn h $ renderF bar
+hPrintStatusBar :: IO.Handle -> StatusBar -> (StatusBar -> String) -> X ()
+hPrintStatusBar h bar renderF = liftIO $ hPutStrLn h $ renderF bar
 
 statusBar :: LayoutClass l Window
-             => T.Text -- ^ The command line to launch the status bar.
+             => String -- ^ The command line to launch the status bar.
              -> X StatusBar -- ^ The StatusTexts to print
-             -> X (StatusBar -> T.Text)
+             -> X (StatusBar -> String)
              -> (XConfig Layout -> (KeyMask, KeySym))
              -- ^ The desired key binding to toggle bar visibility.
              -> XConfig l -- ^ The base config.
              -> IO (XConfig (ModifiedLayout AvoidStruts l))
 statusBar cmd bar renderF k conf = do
-  h <- spawnPipe $ T.unpack cmd
+  h <- spawnPipe cmd
   return $ conf 
     { layoutHook = avoidStruts $ layoutHook conf 
     , logHook    = do
@@ -100,9 +98,9 @@ statusBar cmd bar renderF k conf = do
        keys' = (`M.singleton` sendMessage ToggleStruts) . k
 
 defaultStatusBar :: LayoutClass l Window 
-                   => T.Text
-                   -> X StatusBar 
-                   -> (XConfig Layout -> (KeyMask, KeySym))
-                   -> XConfig l
-                   -> IO (XConfig (ModifiedLayout AvoidStruts l))
+                    => String
+                    -> X StatusBar 
+                    -> (XConfig Layout -> (KeyMask, KeySym))
+                    -> XConfig l
+                    -> IO (XConfig (ModifiedLayout AvoidStruts l))
 defaultStatusBar cmd bar k conf = statusBar cmd bar (return defaultRenderBar) k conf

@@ -5,7 +5,6 @@ module XMonad.Hooks.DynamicLog.Status.DZen2.Universal where
 import XMonad.Hooks.DynamicLog.Status.System
 import XMonad.Hooks.DynamicLog.Status.StatusText
 
-import qualified Data.Text as T
 import Control.Monad.IO.Class
 
 import Data.List
@@ -39,8 +38,8 @@ data Argument = PosArg Position
               | MouseButtonArg MouseButton 
               | ShellCommandArg ShellCommand
 
-type ShellCommand = T.Text
-type Color = T.Text
+type ShellCommand = String
+type Color = String
 
 instance Show Position where
   show LEFT = "_LEFT"
@@ -56,83 +55,83 @@ instance Show Position where
 
 -- | The Text representations of all the commands.
 
-escape :: T.Text
+escape :: String
 escape = "^"
 
-pText :: T.Text
+pText :: String
 pText = escape <> "p"
 
-paText :: T.Text
+paText :: String
 paText = escape <> "pa"
 
-fgText :: T.Text
+fgText :: String
 fgText = escape <> "fg"
 
-bgText :: T.Text
+bgText :: String
 bgText = escape <> "bg"
 
-iText :: T.Text
+iText :: String
 iText = escape <> "i"
 
-rText :: T.Text
+rText :: String
 rText = escape <> "r"
 
-roText :: T.Text
+roText :: String
 roText = escape <> "ro"
 
-cText :: T.Text
+cText :: String
 cText = escape <> "c"
 
-coText :: T.Text
+coText :: String
 coText = escape <> "co"
 
-caText :: T.Text
+caText :: String
 caText = escape <> "ca"
 
-toggleCollapseText :: T.Text
+toggleCollapseText :: String
 toggleCollapseText = escape <> "togglecollapse"
 
-collapseText :: T.Text
+collapseText :: String
 collapseText = escape <> "collapse"
 
-uncollapseText :: T.Text
+uncollapseText :: String
 uncollapseText = escape <> "uncollapse"
 
-toggleStickText :: T.Text
+toggleStickText :: String
 toggleStickText = escape <> "togglestick"
 
-stickText :: T.Text
+stickText :: String
 stickText = escape <> "stick"
 
-unstickText :: T.Text
+unstickText :: String
 unstickText = escape <> "unstick"
 
-toggleHideText :: T.Text
+toggleHideText :: String
 toggleHideText = escape <> "togglehide"
 
-hideText :: T.Text
+hideText :: String
 hideText = escape <> "hide"
 
-unhideText :: T.Text
+unhideText :: String
 unhideText = escape <> "unhide"
 
-raiseText :: T.Text
+raiseText :: String
 raiseText = escape <> "raise"
 
-lowerText :: T.Text
+lowerText :: String
 lowerText = escape <> "lower"
 
-scrollHomeText :: T.Text
+scrollHomeText :: String
 scrollHomeText = escape <> "scrollhome"
 
-scrollEndText :: T.Text
+scrollEndText :: String
 scrollEndText = escape <> "scrollend"
 
-exitText :: T.Text
+exitText :: String
 exitText = escape <> "exit"
 
 -- | Return a Text representation of Command.
-ppCommand :: Command -> T.Text
+ppCommand :: Command -> String
 ppCommand P = pText
 ppCommand PA = paText
 ppCommand FG = fgText
@@ -158,20 +157,20 @@ ppCommand ScrollHome = scrollHomeText
 ppCommand ScrollEnd = scrollEndText
 ppCommand Exit = exitText
 
-ppPosition :: Position -> T.Text
+ppPosition :: Position -> String
 ppPosition HERE = mempty
 ppPosition RESET_Y = mempty
 ppPosition p = fromString $ show p
 
-ppMouseButton :: MouseButton -> T.Text
+ppMouseButton :: MouseButton -> String
 ppMouseButton LeftMB = "1"
 ppMouseButton RightMB = "2"
 ppMouseButton MiddleMB = "3"
 
-ppShellCommand :: ShellCommand -> T.Text
+ppShellCommand :: ShellCommand -> String
 ppShellCommand sc = sc
 
-ppArgument :: Argument -> T.Text
+ppArgument :: Argument -> String
 ppArgument (PosArg p) = ppPosition p
 ppArgument (ColorArg c) = c
 ppArgument (FilePathArg fp) = fromString fp
@@ -179,33 +178,33 @@ ppArgument (DimArg i) = fromString $ show i
 ppArgument (MouseButtonArg mb) = ppMouseButton mb
 ppArgument (ShellCommandArg sc) = ppShellCommand sc
 
-delimitedCommand :: T.Text -> T.Text -> [T.Text] -> T.Text -> T.Text -> StatusText
+delimitedCommand :: String -> String -> [String] -> String -> String -> StatusText
 delimitedCommand com sep args enclosed closer = makeStatusText opener [closer] enclosed 
   where 
     opener = fst $ tags $ simpleCommand com sep args
 
-dzen2DelimitedCommand :: Command -> T.Text -> [Argument] -> T.Text -> StatusText
+dzen2DelimitedCommand :: Command -> String -> [Argument] -> String -> StatusText
 dzen2DelimitedCommand com sep args enclosed = 
   delimitedCommand (ppCommand com) sep (map ppArgument args) enclosed closer
   where
     closer = mconcat . fst . tags $ simpleCommand (ppCommand com) sep []
 
-simpleCommand :: T.Text -> T.Text -> [T.Text] -> StatusText
+simpleCommand :: String -> String -> [String] -> StatusText
 simpleCommand com sep args = makeStatusText [command] mempty mempty
   where
     command = com <> (parens $ mconcat $ intersperse sep args)
     parens x = "(" <> x <> ")"
 
-dzen2SimpleCommand :: Command -> T.Text -> [Argument] -> StatusText
+dzen2SimpleCommand :: Command -> String -> [Argument] -> StatusText
 dzen2SimpleCommand com sep args = simpleCommand (ppCommand com) sep $ map ppArgument args
 
-pSep :: T.Text
+pSep :: String
 pSep = ";"
 
-dimensionSep :: T.Text
+dimensionSep :: String
 dimensionSep = "x"
 
-clickableSep :: T.Text
+clickableSep :: String
 clickableSep = ","
 
 -- DZen2 Commands
@@ -216,10 +215,10 @@ p xpos ypos = dzen2SimpleCommand P pSep $ map PosArg [xpos, ypos]
 pa :: Position -> Position -> StatusText
 pa xpos ypos = dzen2SimpleCommand PA pSep $ map PosArg [xpos, ypos]
 
-fg :: Color -> T.Text -> StatusText
+fg :: Color -> String -> StatusText
 fg color content = dzen2DelimitedCommand FG mempty [ColorArg color] content
 
-bg :: Color -> T.Text -> StatusText
+bg :: Color -> String -> StatusText
 bg color content = dzen2DelimitedCommand BG mempty [ColorArg color] content
 
 i :: FilePath -> StatusText
@@ -237,7 +236,7 @@ c r = dzen2SimpleCommand C mempty [DimArg r]
 co :: Int -> StatusText
 co r = dzen2SimpleCommand CO mempty [DimArg r]
 
-ca :: MouseButton -> ShellCommand -> T.Text -> StatusText
+ca :: MouseButton -> ShellCommand -> String -> StatusText
 ca mb sc content = 
   dzen2DelimitedCommand CA clickableSep [MouseButtonArg mb, ShellCommandArg sc] content
 

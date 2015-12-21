@@ -11,8 +11,6 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.DynamicLog.Status.StatusText
 import XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic
 
-import qualified Data.Text as T
-
 import Data.List
 import Data.Maybe
 import Data.Monoid
@@ -29,16 +27,16 @@ data WorkspacePP m = WSPP { wsppCurrent         :: WorkspaceId -> m StatusText
                           , wsppSort            :: [S.Workspace WorkspaceId (Layout Window) Window] -> [S.Workspace WorkspaceId (Layout Window) Window]
                           }
 
-data WindowPP m = WPP { wppTitle :: T.Text -> m StatusText }
+data WindowPP m = WPP { wppTitle :: String -> m StatusText }
 
-data LayoutPP m = LPP { lppTitle :: T.Text -> m StatusText }
+data LayoutPP m = LPP { lppTitle :: String -> m StatusText }
 
 -- Some simple PPs
 
 defaultWindowPP :: (MonadIO m) => WindowPP m
 defaultWindowPP = WPP { wppTitle = dynText }
 
-defaultWorkspacePP :: (Monoid (m T.Text), MonadIO m) => WorkspacePP m
+defaultWorkspacePP :: (Monoid (m String), MonadIO m) => WorkspacePP m
 defaultWorkspacePP = WSPP { wsppCurrent         = \x -> dynText $ "[" <> fromString x <> "]"
                           , wsppVisible         = \x -> dynText $ "[" <> fromString x <> "]"
                           , wsppHidden          = dynText . fromString
@@ -52,7 +50,7 @@ defaultLayoutPP :: (MonadIO m) => LayoutPP m
 defaultLayoutPP = LPP { lppTitle = dynText }
 
 simpleLayoutPP :: (MonadIO m) => LayoutPP m
-simpleLayoutPP =  LPP { lppTitle = dynText . last . T.words }
+simpleLayoutPP =  LPP { lppTitle = dynText . last . words }
 
 -- Functions
 sepBy :: Monad m
@@ -101,4 +99,3 @@ defaultLayoutTitle = layoutTitle defaultLayoutPP
 
 simpleLayoutTitle :: X StatusText
 simpleLayoutTitle = layoutTitle simpleLayoutPP
-
