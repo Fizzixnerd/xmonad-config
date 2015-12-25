@@ -20,7 +20,7 @@ import Data.Monoid
 
 newtype StatusBarSection = StatusBarSection [ST.StatusText]
 
--- | Left, middle, and right sections of the StatusBar respectively.
+-- | Left, center, and right sections of the StatusBar respectively.
 newtype StatusBar = StatusBar (StatusBarSection, StatusBarSection, StatusBarSection)
 
 makeStatusBarSection :: [ST.StatusText] -> StatusBarSection

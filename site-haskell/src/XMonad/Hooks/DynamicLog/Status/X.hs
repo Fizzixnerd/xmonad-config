@@ -75,10 +75,10 @@ workspaces wspp = do
                       | S.tag w `elem` visibles                                           = wsppVisible
                       | isJust (S.stack w)                                                = wsppHidden
                       | otherwise                                                         = wsppHiddenNoWindows in
-    sepBy (wsppSep wspp) $ sequence $ fmap fmt .  sort' $ fmap S.workspace (S.current winset : S.visible winset) ++ S.hidden winset
+    sepBy (wsppSep wspp) $ sequence $ fmap fmt . sort' $ fmap S.workspace (S.current winset : S.visible winset) ++ S.hidden winset
 
 defaultWorkspaces :: X [StatusText]
-defaultWorkspaces = workspaces defaultWorkspacePP
+defaultWorkspaces = (workspaces defaultWorkspacePP) >>= (\xs -> undefined)
 
 windowTitle :: WindowPP X -> X StatusText
 windowTitle wpp = do 

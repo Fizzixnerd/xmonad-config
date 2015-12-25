@@ -368,25 +368,25 @@ colorBattery colorBattery11,12
 coloredBattery coloredBattery17,18
 coloredBattery coloredBattery18,19
 
-./src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,532
-module XMonad.Hooks.DynamicLog.Status.StatusText XMonad.Hooks.DynamicLog.Status.StatusText2,3
-type Status Status8,9
-type Status b b8,9
-type StatusText StatusText9,10
-length length13,14
+./src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,535
+module XMonad.Hooks.DynamicLog.Status.StatusText XMonad.Hooks.DynamicLog.Status.StatusText3,4
+type Status Status9,10
+type Status b b9,10
+type StatusText StatusText10,11
 length length14,15
-render render17,18
+length length15,16
 render render18,19
-content content24,25
+render render19,20
 content content25,26
-tags tags28,29
+content content26,27
 tags tags29,30
-makeStatusText makeStatusText35,36
+tags tags30,31
 makeStatusText makeStatusText36,37
-simpleStatusText simpleStatusText38,39
+makeStatusText makeStatusText37,38
 simpleStatusText simpleStatusText39,40
-dynST dynST41,42
+simpleStatusText simpleStatusText40,41
 dynST dynST42,43
+dynST dynST43,44
 
 ./src/XMonad/Hooks/DynamicLog/Status/StatusText/Dynamic.hs,232
 module XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic2,3

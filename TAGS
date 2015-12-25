@@ -1,16 +1,15 @@
 
-./xmonad.hs,286
-module Main Main3,4
-myWorkspaces myWorkspaces29,30
-myGenericKeys myGenericKeys33,34
-myMultimediaKeys myMultimediaKeys41,42
-myKeys myKeys46,47
-myConfig myConfig50,51
-dzen2Time dzen2Time62,63
-dzen2Time dzen2Time63,64
-dzen2 dzen265,66
-dzen2 dzen268,69
+./xmonad.hs,249
+module Main Main4,5
+myWorkspaces myWorkspaces30,31
+myGenericKeys myGenericKeys34,35
+myMultimediaKeys myMultimediaKeys42,43
+myKeys myKeys47,48
+myConfig myConfig51,52
+dzen2 dzen263,64
+dzen2 dzen266,67
 main main77,78
+main main78,79
 
 ./dzen.hs,169
 dzenFont dzenFont0,1

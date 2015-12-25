@@ -1,4 +1,5 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, 
+             GeneralizedNewtypeDeriving #-}
 
 module XMonad.Hooks.DynamicLog.Status.StatusText where
 
