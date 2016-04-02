@@ -368,7 +368,7 @@ colorBattery colorBattery11,12
 coloredBattery coloredBattery17,18
 coloredBattery coloredBattery18,19
 
-./src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,535
+./src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,581
 module XMonad.Hooks.DynamicLog.Status.StatusText XMonad.Hooks.DynamicLog.Status.StatusText3,4
 type Status Status9,10
 type Status b b9,10
@@ -381,12 +381,14 @@ content content25,26
 content content26,27
 tags tags29,30
 tags tags30,31
-makeStatusText makeStatusText36,37
-makeStatusText makeStatusText37,38
-simpleStatusText simpleStatusText39,40
-simpleStatusText simpleStatusText40,41
-dynST dynST42,43
-dynST dynST43,44
+isEmpty isEmpty34,35
+isEmpty isEmpty35,36
+makeStatusText makeStatusText39,40
+makeStatusText makeStatusText40,41
+simpleStatusText simpleStatusText44,45
+simpleStatusText simpleStatusText45,46
+dynST dynST48,49
+dynST dynST49,50
 
 ./src/XMonad/Hooks/DynamicLog/Status/StatusText/Dynamic.hs,232
 module XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic2,3
@@ -447,40 +449,40 @@ defaultLayoutTitle defaultLayoutTitle97,98
 simpleLayoutTitle simpleLayoutTitle99,100
 simpleLayoutTitle simpleLayoutTitle100,101
 
-./src/XMonad/Hooks/DynamicLog/Status/Bars.hs,1310
-module XMonad.Hooks.DynamicLog.Status.Bars XMonad.Hooks.DynamicLog.Status.Bars3,4
-newtype StatusBarSection StatusBarSection20,21
-newtype StatusBarSection = StatusBarSection StatusBarSection20,21
-newtype StatusBar StatusBar23,24
-newtype StatusBar = StatusBar StatusBar23,24
-makeStatusBarSection makeStatusBarSection25,26
+./src/XMonad/Hooks/DynamicLog/Status/Bars.hs,1287
+module XMonad.Hooks.DynamicLog.Status.Bars XMonad.Hooks.DynamicLog.Status.Bars2,3
+newtype StatusBarSection StatusBarSection21,22
+newtype StatusBarSection = StatusBarSection StatusBarSection21,22
+newtype StatusBar StatusBar24,25
+newtype StatusBar = StatusBar StatusBar24,25
 makeStatusBarSection makeStatusBarSection26,27
-makeStatusBar makeStatusBar28,29
+makeStatusBarSection makeStatusBarSection27,28
 makeStatusBar makeStatusBar29,30
-length length33,34
+makeStatusBar makeStatusBar30,31
 length length34,35
-numberOfSections numberOfSections38,39
-numberOfSections numberOfSections39,40
-numberOfNonemptySections numberOfNonemptySections42,43
-numberOfNonemptySections numberOfNonemptySections43,44
-left left45,46
-left left46,47
-center center48,49
-center center49,50
-right right51,52
-right right52,53
-simpleRenderStatusBarSection simpleRenderStatusBarSection54,55
-simpleRenderStatusBarSection simpleRenderStatusBarSection55,56
-simpleRenderBar simpleRenderBar58,59
-simpleRenderBar simpleRenderBar59,60
-defaultRenderBar defaultRenderBar69,70
-defaultRenderBar defaultRenderBar70,71
-hPrintStatusBar hPrintStatusBar73,74
-hPrintStatusBar hPrintStatusBar74,75
-statusBar statusBar76,77
-statusBar statusBar84,85
-defaultStatusBar defaultStatusBar99,100
-defaultStatusBar defaultStatusBar105,106
+length length35,36
+numberOfTexts numberOfTexts39,40
+numberOfTexts numberOfTexts40,41
+numberOfNonemptyTexts numberOfNonemptyTexts43,44
+numberOfNonemptyTexts numberOfNonemptyTexts44,45
+left left47,48
+left left48,49
+center center51,52
+center center52,53
+right right55,56
+right right56,57
+simpleRenderStatusBarSection simpleRenderStatusBarSection60,61
+simpleRenderStatusBarSection simpleRenderStatusBarSection61,62
+simpleRenderBar simpleRenderBar64,65
+simpleRenderBar simpleRenderBar65,66
+defaultRenderBar defaultRenderBar75,76
+defaultRenderBar defaultRenderBar76,77
+hPrintStatusBar hPrintStatusBar80,81
+hPrintStatusBar hPrintStatusBar81,82
+statusBar statusBar83,84
+statusBar statusBar91,92
+defaultStatusBar defaultStatusBar106,107
+defaultStatusBar defaultStatusBar112,113
 
 ./src/XMonad/Hooks/DynamicLog/Status/Xft.hs,82
 module XMonad.Hooks.DynamicLog.Status.Xft XMonad.Hooks.DynamicLog.Status.Xft3,4

@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module XMonad.Hooks.DynamicLog.Status.Bars where
 
@@ -18,6 +17,8 @@ import qualified Data.List as L
 import qualified System.IO as IO
 import Data.Monoid
 
+-- | A bunch of StatusTexts that belong together in the same area of
+-- the StatusBar.
 newtype StatusBarSection = StatusBarSection [ST.StatusText]
 
 -- | Left, center, and right sections of the StatusBar respectively.
@@ -36,22 +37,27 @@ length (StatusBarSection xs) = sum $ fmap ST.length $ xs
 
 -- | Return the number of different StatusTexts inside the
 -- StatusBarSection.
-numberOfSections :: StatusBarSection -> Int
-numberOfSections (StatusBarSection xs) = L.length xs
+numberOfTexts :: StatusBarSection -> Int
+numberOfTexts (StatusBarSection xs) = L.length xs
 
--- | FIXME: This is undefined.
-numberOfNonemptySections :: StatusBarSection -> Int
-numberOfNonemptySections (StatusBarSection xs) = undefined
+-- | Return the number of non-empty StatusTexts inside.
+numberOfNonemptyTexts :: StatusBarSection -> Int
+numberOfNonemptyTexts (StatusBarSection xs) = L.length $ filter ST.isEmpty xs
 
+-- | Return the left section of the StatusBar.
 left :: StatusBar -> StatusBarSection
 left (StatusBar (l,c,r)) = l
 
+-- | Return the center section of the StatusBar.
 center :: StatusBar -> StatusBarSection
 center (StatusBar (l,c,r)) = c
 
+-- | Return the right section of the StatusBar.
 right :: StatusBar -> StatusBarSection
 right (StatusBar (l,c,r)) = r
 
+-- | Return the rendered StatusBarSection with StatusTexts separated by the
+-- String sep.
 simpleRenderStatusBarSection :: StatusBarSection -> String -> String
 simpleRenderStatusBarSection (StatusBarSection sbs) sep = mconcat $ fmap ST.render $ L.intersperse (ST.simpleStatusText sep) sbs
 
@@ -61,15 +67,16 @@ simpleRenderBar sb sep =
   let l = left sb
       c = center sb
       r = right sb
-      leftAlignedL = ST.render $ const (simpleRenderStatusBarSection l sep) <$> U.p U.LEFT U.HERE
+      leftAlignedL   = ST.render $ const (simpleRenderStatusBarSection l sep) <$> U.p U.LEFT   U.HERE
       centerAlignedC = ST.render $ const (simpleRenderStatusBarSection c sep) <$> U.p U.CENTER U.HERE
-      rightAlignedR = ST.render $ const (simpleRenderStatusBarSection r sep) <$> U.p U.RIGHT U.HERE
+      rightAlignedR  = ST.render $ const (simpleRenderStatusBarSection r sep) <$> U.p U.RIGHT  U.HERE
   in
     leftAlignedL <> centerAlignedC <> rightAlignedR
 
 defaultRenderBar :: StatusBar -> String
 defaultRenderBar bar = simpleRenderBar bar sep
-  where sep = " | "
+  where 
+    sep = " | "
 
 hPrintStatusBar :: IO.Handle -> StatusBar -> (StatusBar -> String) -> X ()
 hPrintStatusBar h bar renderF = liftIO $ hPutStrLn h $ renderF bar
