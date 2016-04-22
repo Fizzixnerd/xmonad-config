@@ -10,7 +10,7 @@ name:                site-haskell
 -- PVP summary:      +-+------- breaking API changes
 --                   | | +----- non-breaking API additions
 --                   | | | +--- code changes with no API change
-version:             0.1.0.0
+version:             0.2.0.0
 
 -- A short (one-line) description of the package.
 synopsis:            A more organized XMonad config.
@@ -50,16 +50,31 @@ library
   -- Modules exported by the library.
   exposed-modules:   
 --  System.Information.Battery
-                       System.Desktop.Commands.Fizzixnerd
-                     , XMonad.Actions.Fizzixnerd
-                     , XMonad.Hooks.Fizzixnerd
-                     , XMonad.Hooks.DynamicLog.Status.X
-                     , XMonad.Hooks.DynamicLog.Status.System
-                     , XMonad.Hooks.DynamicLog.Status.StatusText
-                     , XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic
-                     , XMonad.Hooks.DynamicLog.Status.DZen2.Universal
-                     , XMonad.Hooks.DynamicLog.Status.DZen2.Fancy
-                     , XMonad.Hooks.DynamicLog.Status.Bars
+                     System.Desktop.Commands.Fizzixnerd
+                   , XMonad.Actions.Fizzixnerd
+                   , XMonad.Hooks.Fizzixnerd
+                     -- old statustext
+                   , XMonad.Hooks.DynamicLog.Status.X
+                   , XMonad.Hooks.DynamicLog.Status.System
+                   , XMonad.Hooks.DynamicLog.Status.StatusText
+                   , XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic
+                   , XMonad.Hooks.DynamicLog.Status.DZen2.Universal
+                   , XMonad.Hooks.DynamicLog.Status.DZen2.Fancy
+                   , XMonad.Hooks.DynamicLog.Status.Bars
+                     -- new statustext
+                   , XMonad.Hooks.DynamicLog.Dzen2.Status
+                   , XMonad.Hooks.DynamicLog.Dzen2.StatusText
+                   , XMonad.Hooks.DynamicLog.Dzen2.Format
+                   , XMonad.Hooks.DynamicLog.Dzen2.Bars
+                   , XMonad.Hooks.DynamicLog.Dzen2.Font
+                   , XMonad.Hooks.DynamicLog.Dzen2.Width
+                   , XMonad.Hooks.DynamicLog.Dzen2.Content
+                   , XMonad.Hooks.DynamicLog.Dzen2.Render
+                   , XMonad.Hooks.DynamicLog.Dzen2.Dynamic
+                   , XMonad.Hooks.DynamicLog.Dzen2.System
+                   , XMonad.Hooks.DynamicLog.Dzen2.X
+                   , XMonad.Hooks.DynamicLog.Dzen2.Battery
+                   , XMonad.Util.Font.Width
   
   -- Modules included in this library but not exported.
   -- other-modules:       
@@ -67,6 +82,7 @@ library
   -- LANGUAGE extensions used by modules in this package.
   other-extensions:    OverloadedStrings
                      , FlexibleContexts
+                     , FlexibleInstances
   
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.8 && <4.9
@@ -76,9 +92,11 @@ library
                      , xmonad >=0.11 && <0.12
                      , xmonad-contrib >=0.11 && <0.12
                      , pretty >=1.1 && < 1.2
-                     , transformers >= 0.4.2 && < 0.5
-                     , mtl >= 2.2.1 && < 2.3
-                     , X11-xft >= 0.3.1 && < 0.4
+                     , transformers >=0.4.2 && <0.5
+                     , mtl >=2.2.1 && <2.3
+                     , X11-xft >=0.3.1 && <0.4
+                     , old-time >=1.1 && <1.2
+                     , old-locale >=1.0 && <1.1
   
   -- Directories containing source files.
   hs-source-dirs:      src

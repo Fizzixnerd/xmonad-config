@@ -1,15 +1,24 @@
 
-./xmonad.hs,249
-module Main Main4,5
-myWorkspaces myWorkspaces30,31
-myGenericKeys myGenericKeys34,35
-myMultimediaKeys myMultimediaKeys42,43
-myKeys myKeys47,48
-myConfig myConfig51,52
-dzen2 dzen263,64
-dzen2 dzen266,67
-main main77,78
-main main78,79
+./xmonad.hs,522
+module Main Main6,7
+myWorkspaces myWorkspaces43,44
+myWorkspaces myWorkspaces44,45
+myGenericKeys myGenericKeys48,49
+myMultimediaKeys myMultimediaKeys56,57
+myKeys myKeys61,62
+myConfig myConfig65,66
+partialFontName partialFontName78,79
+partialFontName partialFontName79,80
+myFontName myFontName81,82
+myFontName myFontName82,83
+myFont myFont84,85
+myFont myFont85,86
+data MyFontMyFont102,103
+instance instance103,104
+dzen2 dzen2106,107
+dzen2 dzen2111,112
+main main121,122
+main main122,123
 
 ./dzen.hs,169
 dzenFont dzenFont0,1
@@ -242,6 +251,217 @@ myLayoutHook myLayoutHook68,69
 myManageHook myManageHook77,78
 myhandleEventHook myhandleEventHook86,87
 
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/Render.hs,182
+module XMonad.Hooks.DynamicLog.Dzen2.Render XMonad.Hooks.DynamicLog.Dzen2.Render3,4
+class Render Render7,8
+class Render Render7,8
+  render render8,9
+instance instance10,11
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/Status.hs,2194
+module XMonad.Hooks.DynamicLog.Dzen2.Status XMonad.Hooks.DynamicLog.Dzen2.Status2,3
+data Position Position12,13
+data Position = PX PX12,13
+data Position = PX Int | PY PY12,13
+data Position = PX Int | PY Int | PXY PXY12,13
+instance instance13,14
+data RelativePosition RelativePosition22,23
+data RelativePosition = RPLeft RPLeft22,23
+data RelativePosition = RPLeft | RPRight RPRight22,23
+data RelativePosition = RPLeft | RPRight | RPCenterRPCenter22,23
+                      | RPTop RPTop23,24
+                      | RPTop | RPBottomRPBottom23,24
+                      | RPLockX RPLockX24,25
+                      | RPLockX | RPUnlockXRPUnlockX24,25
+                      | RPPosition RPPosition25,26
+newtype AbsolutePosition AbsolutePosition36,37
+newtype AbsolutePosition = APPosition APPosition36,37
+newtype Color Color39,40
+newtype Color = CHex CHex39,40
+newtype Dimension Dimension42,43
+newtype Dimension = Dimension Dimension42,43
+data State State45,46
+data State = On On45,46
+data State = On | Off Off45,46
+data State = On | Off | Toggle Toggle45,46
+data MouseButton MouseButton47,48
+data MouseButton = MBLeft MBLeft47,48
+data MouseButton = MBLeft | MBRight MBRight47,48
+data MouseButton = MBLeft | MBRight | MBMiddle MBMiddle47,48
+newtype ShellCommand ShellCommand53,54
+newtype ShellCommand = ShellCommand ShellCommand53,54
+data Static Static56,57
+data Static = SEmpty SEmpty56,57
+            | SI SI61,62
+            | SR SR62,63
+            | SRO SRO63,64
+            | SC SC64,65
+            | SCO SCO65,66
+            | SCollapse SCollapse67,68
+            | SStick SStick68,69
+            | SHide SHide69,70
+            | SRaiseSRaise70,71
+            | SLowerSLower71,72
+            | SScrollHomeSScrollHome72,73
+            | SScrollEndSScrollEnd73,74
+            | SExit SExit74,75
+data Status Status100,101
+data Status s = SAtom SAtom100,101
+              | SList SList101,102
+              | SP SP103,104
+              | SPA SPA104,105
+              | SFG SFG106,107
+              | SBG SBG107,108
+              | SCA SCA108,109
+              | SStatic SStatic110,111
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/Font.hs,272
+module XMonad.Hooks.DynamicLog.Dzen2.Font XMonad.Hooks.DynamicLog.Dzen2.Font0,1
+newtype FontName FontName5,6
+newtype FontName = FontName FontName5,6
+type PixelWidth PixelWidth6,7
+class Font Font8,9
+class Font Font8,9
+  font font9,10
+instance instance11,12
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/Placement.hs,632
+module XMonad.Hooks.DynamicLog.Dzen2.Placement XMonad.Hooks.DynamicLog.Dzen2.Placement3,4
+mkStatusText mkStatusText13,14
+mkStatusText mkStatusText14,15
+move move16,17
+move move17,18
+put put19,20
+put put20,21
+fg fg22,23
+fg fg23,24
+bg bg25,26
+bg bg26,27
+intersperseST intersperseST28,29
+intersperseST intersperseST29,30
+atLeft' atLeft'31,32
+atLeft' atLeft'32,33
+atLeft atLeft34,35
+atLeft atLeft35,36
+atRight' atRight'37,38
+atRight' atRight'38,39
+atRight atRight40,41
+atRight atRight41,42
+atCenter' atCenter'45,46
+atCenter' atCenter'46,47
+atCenter atCenter48,49
+atCenter atCenter49,50
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/StatusText.hs,452
+module XMonad.Hooks.DynamicLog.Dzen2.StatusText XMonad.Hooks.DynamicLog.Dzen2.StatusText3,4
+newtype StatusT StatusT15,16
+newtype StatusT fnt s = StatusT StatusT15,16
+type StatusText StatusText16,17
+type StatusText fnt fnt16,17
+instance instance18,19
+length length48,49
+length length49,50
+width width53,54
+width width54,55
+onto onto58,59
+onto onto59,60
+pack pack61,62
+pack pack62,63
+unpack unpack64,65
+unpack unpack65,66
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/Bars.hs,718
+module XMonad.Hooks.DynamicLog.Dzen2.Bars XMonad.Hooks.DynamicLog.Dzen2.Bars2,3
+newtype StatusBar StatusBar22,23
+newtype StatusBar fnt = StatusBar StatusBar22,23
+mkStatusBar mkStatusBar24,25
+mkStatusBar mkStatusBar25,26
+left left28,29
+left left29,30
+center center32,33
+center center33,34
+right right36,37
+right right37,38
+simpleRenderBar simpleRenderBar40,41
+simpleRenderBar simpleRenderBar41,42
+defaultRenderBar defaultRenderBar55,56
+defaultRenderBar defaultRenderBar56,57
+hPrintStatusBar hPrintStatusBar59,60
+hPrintStatusBar hPrintStatusBar60,61
+statusBar statusBar64,65
+statusBar statusBar72,73
+defaultStatusBar defaultStatusBar86,87
+defaultStatusBar defaultStatusBar94,95
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/Dynamic.hs,208
+module XMonad.Hooks.DynamicLog.Dzen2.Dynamic XMonad.Hooks.DynamicLog.Dzen2.Dynamic2,3
+type Process Process11,12
+dynText dynText13,14
+dynText dynText14,15
+dynProc dynProc16,17
+dynProc dynProc17,18
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/Width.hs,84
+module XMonad.Hooks.DynamicLog.Dzen2.Width XMonad.Hooks.DynamicLog.Dzen2.Width3,4
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/Content.hs,190
+module XMonad.Hooks.DynamicLog.Dzen2.Content XMonad.Hooks.DynamicLog.Dzen2.Content3,4
+class Content Content7,8
+class Content Content7,8
+  content content8,9
+instance instance10,11
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/System.hs,252
+module XMonad.Hooks.DynamicLog.Dzen2.System XMonad.Hooks.DynamicLog.Dzen2.System2,3
+date date12,13
+date date13,14
+battery battery18,19
+battery battery19,20
+batteryPercentage batteryPercentage26,27
+batteryPercentage batteryPercentage27,28
+
+./site-haskell/src/XMonad/Hooks/DynamicLog/Dzen2/X.hs,1732
+module XMonad.Hooks.DynamicLog.Dzen2.X XMonad.Hooks.DynamicLog.Dzen2.X2,3
+data WorkspacePP WorkspacePP21,22
+data WorkspacePP m fnt = WSPP WSPP21,22
+data WorkspacePP m fnt = WSPP { wsppCurrent wsppCurrent21,22
+                              , wsppVisible wsppVisible22,23
+                              , wsppHidden wsppHidden23,24
+                              , wsppHiddenNoWindows wsppHiddenNoWindows24,25
+                              , wsppUrgent wsppUrgent25,26
+                              , wsppSep wsppSep26,27
+                              , wsppSort wsppSort27,28
+data WindowPP WindowPP30,31
+data WindowPP m fnt = WPP WPP30,31
+data WindowPP m fnt = WPP { wppTitle wppTitle30,31
+data LayoutPP LayoutPP32,33
+data LayoutPP m fnt = LPP LPP32,33
+data LayoutPP m fnt = LPP { lppTitle lppTitle32,33
+defaultWindowPP defaultWindowPP36,37
+defaultWindowPP defaultWindowPP37,38
+defaultWorkspacePP defaultWorkspacePP39,40
+defaultWorkspacePP defaultWorkspacePP40,41
+defaultLayoutPP defaultLayoutPP49,50
+defaultLayoutPP defaultLayoutPP50,51
+simpleLayoutPP simpleLayoutPP52,53
+simpleLayoutPP simpleLayoutPP53,54
+sepBy sepBy56,57
+sepBy sepBy60,61
+workspaces workspaces65,66
+workspaces workspaces66,67
+defaultWorkspaces defaultWorkspaces82,83
+defaultWorkspaces defaultWorkspaces83,84
+windowTitle windowTitle85,86
+windowTitle windowTitle86,87
+defaultWindowTitle defaultWindowTitle91,92
+defaultWindowTitle defaultWindowTitle92,93
+layoutTitle layoutTitle94,95
+layoutTitle layoutTitle95,96
+defaultLayoutTitle defaultLayoutTitle99,100
+defaultLayoutTitle defaultLayoutTitle100,101
+simpleLayoutTitle simpleLayoutTitle102,103
+simpleLayoutTitle simpleLayoutTitle103,104
+
 ./site-haskell/src/XMonad/Hooks/DynamicLog/PrettyPrinter/DZen2.hs,100
 module XMonad.Hooks.DynamicLog.PrettyPrinter.DZen2 XMonad.Hooks.DynamicLog.PrettyPrinter.DZen22,3
 
@@ -459,25 +679,27 @@ colorBattery colorBattery11,12
 coloredBattery coloredBattery17,18
 coloredBattery coloredBattery18,19
 
-./site-haskell/src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,532
-module XMonad.Hooks.DynamicLog.Status.StatusText XMonad.Hooks.DynamicLog.Status.StatusText2,3
-type Status Status8,9
-type Status b b8,9
-type StatusText StatusText9,10
-length length13,14
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/StatusText.hs,581
+module XMonad.Hooks.DynamicLog.Status.StatusText XMonad.Hooks.DynamicLog.Status.StatusText3,4
+type Status Status9,10
+type Status b b9,10
+type StatusText StatusText10,11
 length length14,15
-render render17,18
+length length15,16
 render render18,19
-content content24,25
+render render19,20
 content content25,26
-tags tags28,29
+content content26,27
 tags tags29,30
-makeStatusText makeStatusText35,36
-makeStatusText makeStatusText36,37
-simpleStatusText simpleStatusText38,39
-simpleStatusText simpleStatusText39,40
-dynST dynST41,42
-dynST dynST42,43
+tags tags30,31
+isEmpty isEmpty34,35
+isEmpty isEmpty35,36
+makeStatusText makeStatusText39,40
+makeStatusText makeStatusText40,41
+simpleStatusText simpleStatusText44,45
+simpleStatusText simpleStatusText45,46
+dynST dynST48,49
+dynST dynST49,50
 
 ./site-haskell/src/XMonad/Hooks/DynamicLog/Status/StatusText/Dynamic.hs,232
 module XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic XMonad.Hooks.DynamicLog.Status.StatusText.Dynamic2,3
@@ -538,46 +760,51 @@ defaultLayoutTitle defaultLayoutTitle97,98
 simpleLayoutTitle simpleLayoutTitle99,100
 simpleLayoutTitle simpleLayoutTitle100,101
 
-./site-haskell/src/XMonad/Hooks/DynamicLog/Status/Bars.hs,1310
-module XMonad.Hooks.DynamicLog.Status.Bars XMonad.Hooks.DynamicLog.Status.Bars3,4
-newtype StatusBarSection StatusBarSection20,21
-newtype StatusBarSection = StatusBarSection StatusBarSection20,21
-newtype StatusBar StatusBar23,24
-newtype StatusBar = StatusBar StatusBar23,24
-makeStatusBarSection makeStatusBarSection25,26
+./site-haskell/src/XMonad/Hooks/DynamicLog/Status/Bars.hs,1287
+module XMonad.Hooks.DynamicLog.Status.Bars XMonad.Hooks.DynamicLog.Status.Bars2,3
+newtype StatusBarSection StatusBarSection21,22
+newtype StatusBarSection = StatusBarSection StatusBarSection21,22
+newtype StatusBar StatusBar24,25
+newtype StatusBar = StatusBar StatusBar24,25
 makeStatusBarSection makeStatusBarSection26,27
-makeStatusBar makeStatusBar28,29
+makeStatusBarSection makeStatusBarSection27,28
 makeStatusBar makeStatusBar29,30
-length length33,34
+makeStatusBar makeStatusBar30,31
 length length34,35
-numberOfSections numberOfSections38,39
-numberOfSections numberOfSections39,40
-numberOfNonemptySections numberOfNonemptySections42,43
-numberOfNonemptySections numberOfNonemptySections43,44
-left left45,46
-left left46,47
-center center48,49
-center center49,50
-right right51,52
-right right52,53
-simpleRenderStatusBarSection simpleRenderStatusBarSection54,55
-simpleRenderStatusBarSection simpleRenderStatusBarSection55,56
-simpleRenderBar simpleRenderBar58,59
-simpleRenderBar simpleRenderBar59,60
-defaultRenderBar defaultRenderBar69,70
-defaultRenderBar defaultRenderBar70,71
-hPrintStatusBar hPrintStatusBar73,74
-hPrintStatusBar hPrintStatusBar74,75
-statusBar statusBar76,77
-statusBar statusBar84,85
-defaultStatusBar defaultStatusBar99,100
-defaultStatusBar defaultStatusBar105,106
+length length35,36
+numberOfTexts numberOfTexts39,40
+numberOfTexts numberOfTexts40,41
+numberOfNonemptyTexts numberOfNonemptyTexts43,44
+numberOfNonemptyTexts numberOfNonemptyTexts44,45
+left left47,48
+left left48,49
+center center51,52
+center center52,53
+right right55,56
+right right56,57
+simpleRenderStatusBarSection simpleRenderStatusBarSection60,61
+simpleRenderStatusBarSection simpleRenderStatusBarSection61,62
+simpleRenderBar simpleRenderBar64,65
+simpleRenderBar simpleRenderBar65,66
+defaultRenderBar defaultRenderBar75,76
+defaultRenderBar defaultRenderBar76,77
+hPrintStatusBar hPrintStatusBar80,81
+hPrintStatusBar hPrintStatusBar81,82
+statusBar statusBar83,84
+statusBar statusBar91,92
+defaultStatusBar defaultStatusBar106,107
+defaultStatusBar defaultStatusBar112,113
 
 ./site-haskell/src/XMonad/Hooks/DynamicLog/Status/Xft.hs,82
 module XMonad.Hooks.DynamicLog.Status.Xft XMonad.Hooks.DynamicLog.Status.Xft3,4
 
 ./site-haskell/src/XMonad/Util/IO.hs,42
 module XMonad.Util.IO XMonad.Util.IO0,1
+
+./site-haskell/src/XMonad/Util/Font/Width.hs,105
+module XMonad.Util.Font.Width XMonad.Util.Font.Width0,1
+xftWidth xftWidth8,9
+xftWidth xftWidth9,10
 
 ./site-haskell/Setup.hs,15
 main main1,2

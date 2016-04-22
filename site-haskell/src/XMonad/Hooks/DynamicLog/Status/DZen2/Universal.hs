@@ -281,4 +281,3 @@ scrollEnd = dzen2SimpleCommand ScrollEnd mempty []
 
 exit :: StatusText
 exit = dzen2SimpleCommand Exit mempty []
-
